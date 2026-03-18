@@ -1,0 +1,46 @@
+pipeline {
+    agent any
+
+    environment {
+        AWS_CREDENTIALS = credentials('aws-credentials')
+    }
+
+    stages {
+        stage('Confirmar Destruccion') {
+            steps {
+                input message: '⚠️ ¿Estas seguro de destruir el cluster EKS? Esta accion no se puede deshacer.',
+                      ok: 'Si, destruir'
+            }
+        }
+
+        stage('Cleanup ArgoCD') {
+            steps {
+                sh """
+                    aws eks update-kubeconfig --region us-east-1 --name curso-gitops-eks || true
+                    kubectl delete application curso-gitops -n argocd || true
+                    kubectl delete namespace curso-gitops || true
+                """
+            }
+        }
+
+        stage('Destroy EKS') {
+            steps {
+                dir('infrastructure/terraform/eks-cluster') {
+                    sh """
+                        terraform init
+                        terraform destroy -auto-approve
+                    """
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo '✅ Cluster EKS eliminado exitosamente. Recuerda destruir Jenkins EC2 desde tu local.'
+        }
+        failure {
+            echo '❌ Error al destruir. Revisa manualmente en la consola de AWS.'
+        }
+    }
+}

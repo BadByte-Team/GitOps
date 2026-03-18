@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es" data-bs-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso - Curso GitOps</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --app-radius: 10px;
+            --app-radius-sm: 7px;
+            --app-transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            transition: background-color var(--app-transition);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ── Auth Card ── */
+        .auth-card {
+            max-width: 400px;
+            width: 100%;
+            margin: auto;
+            padding: 2.25rem 2rem 1.75rem;
+            border-radius: 14px;
+            border: 1px solid var(--bs-border-color);
+            background: var(--bs-body-bg);
+        }
+
+        /* ── Brand ── */
+        .brand-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            background: rgba(var(--bs-primary-rgb), 0.12);
+            margin-bottom: 0.75rem;
+        }
+
+        .brand-badge i {
+            font-size: 1.6rem;
+            color: var(--bs-primary);
+        }
+
+        .brand-title {
+            font-weight: 800;
+            font-size: 1.35rem;
+            letter-spacing: -0.03em;
+            line-height: 1.2;
+        }
+
+        .brand-subtitle {
+            font-size: 0.85rem;
+            color: var(--bs-secondary-color);
+            margin-top: 0.25rem;
+        }
+
+        /* ── Inputs ── */
+        .auth-card .input-group {
+            position: relative;
+        }
+
+        .auth-card .input-group-text {
+            border-radius: var(--app-radius-sm) 0 0 var(--app-radius-sm);
+            border-right: none;
+            background: var(--bs-tertiary-bg);
+            color: var(--bs-secondary-color);
+            font-size: 0.88rem;
+            padding: 0.55rem 0.85rem;
+        }
+
+        .auth-card .form-control {
+            border-radius: 0 var(--app-radius-sm) var(--app-radius-sm) 0;
+            font-size: 0.88rem;
+            padding: 0.55rem 0.85rem;
+            transition: border-color var(--app-transition), box-shadow var(--app-transition);
+        }
+
+        .auth-card .form-control:focus {
+            border-color: var(--bs-primary);
+            box-shadow: 0 0 0 3px rgba(var(--bs-primary-rgb), 0.12);
+        }
+
+        /* ── Submit Button ── */
+        .btn-auth {
+            border-radius: var(--app-radius-sm);
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 0.6rem 1rem;
+            letter-spacing: -0.01em;
+            transition: transform var(--app-transition), box-shadow var(--app-transition);
+        }
+
+        .btn-auth:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(var(--bs-primary-rgb), 0.3);
+        }
+
+        .btn-auth:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        /* ── Toggle ── */
+        .btn-toggle {
+            font-size: 0.82rem;
+            color: var(--bs-secondary-color);
+            transition: color var(--app-transition);
+        }
+
+        .btn-toggle:hover {
+            color: var(--bs-primary);
+        }
+
+        /* ── Alerts ── */
+        .auth-card .alert {
+            font-size: 0.84rem;
+            border-radius: var(--app-radius-sm);
+            padding: 0.6rem 0.85rem;
+        }
+
+        /* ── Theme Toggle ── */
+        .theme-toggle {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            font-size: 1.25rem;
+            cursor: pointer;
+            opacity: 0.6;
+            transition: opacity var(--app-transition), transform var(--app-transition);
+        }
+
+        .theme-toggle:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        /* ── Divider ── */
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin: 0.25rem 0 0.75rem;
+            font-size: 0.75rem;
+            color: var(--bs-secondary-color);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--bs-border-color);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* ── Footer ── */
+        .footer-text {
+            position: fixed;
+            bottom: 14px;
+            font-size: 0.72rem;
+            letter-spacing: 0.02em;
+            color: var(--bs-secondary-color);
+            opacity: 0.45;
+        }
+    </style>
+</head>
+
+<body class="bg-body-tertiary">
+    <i class="bi bi-moon-stars-fill theme-toggle" id="theme-icon" onclick="toggleTheme()"></i>
+
+    <div class="card shadow-sm auth-card">
+        <div class="text-center mb-4">
+            <div class="brand-badge mx-auto"><i class="bi bi-git"></i></div>
+            <div class="brand-title">GitOps Master</div>
+            <div class="brand-subtitle" id="form-subtitle">Inicia sesión para acceder a los módulos</div>
+        </div>
+
+        <div id="alert-msg" class="alert hidden text-center" role="alert"></div>
+
+        <div class="input-group mb-2">
+            <span class="input-group-text"><i class="bi bi-person"></i></span>
+            <input type="text" id="username" class="form-control" placeholder="Usuario">
+        </div>
+        <div class="input-group mb-3">
+            <span class="input-group-text"><i class="bi bi-lock"></i></span>
+            <input type="password" id="password" class="form-control" placeholder="Contraseña">
+        </div>
+
+        <button id="btn-submit" class="btn btn-primary btn-auth w-100 mb-2" onclick="handleAuth()">
+            <i class="bi bi-box-arrow-in-right me-1"></i> Acceder al Curso
+        </button>
+
+        <div class="divider">o</div>
+
+        <div class="text-center">
+            <button class="btn btn-link text-decoration-none btn-toggle" id="btn-toggle" onclick="toggleMode()">
+                ¿No tienes cuenta? <strong>Regístrate aquí</strong>
+            </button>
+        </div>
+    </div>
+
+    <span class="footer-text">Curso GitOps &copy; 2026</span>
+
+    <script>
+        let isLoginMode = true;
+
+        function initTheme() {
+            const theme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-bs-theme', theme);
+            document.getElementById('theme-icon').className = theme === 'dark' ? 'bi bi-sun-fill theme-toggle text-warning' : 'bi bi-moon-stars-fill theme-toggle';
+        }
+        function toggleTheme() {
+            const newTheme = document.documentElement.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-bs-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            document.getElementById('theme-icon').className = newTheme === 'dark' ? 'bi bi-sun-fill theme-toggle text-warning' : 'bi bi-moon-stars-fill theme-toggle';
+        }
+        initTheme();
+
+        if (localStorage.getItem('token')) window.location.href = '/dashboard';
+
+        function toggleMode() {
+            isLoginMode = !isLoginMode;
+            document.getElementById('form-subtitle').innerText = isLoginMode ? "Inicia sesión para acceder a los módulos" : "Crea una cuenta nueva para estudiar";
+            document.getElementById('btn-submit').innerHTML = isLoginMode ? '<i class="bi bi-box-arrow-in-right me-1"></i> Acceder al Curso' : '<i class="bi bi-person-plus me-1"></i> Registrar Usuario';
+            document.getElementById('btn-toggle').innerHTML = isLoginMode ? '¿No tienes cuenta? <strong>Regístrate aquí</strong>' : '¿Ya tienes cuenta? <strong>Inicia sesión</strong>';
+            document.getElementById('alert-msg').classList.add('hidden');
+        }
+
+        function showAlert(message, type) {
+            const alertBox = document.getElementById('alert-msg');
+            alertBox.className = `alert alert-${type}`;
+            alertBox.innerText = message;
+        }
+
+        async function handleAuth() {
+            const btn = document.getElementById('btn-submit');
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const endpoint = isLoginMode ? '/api/login' : '/api/register';
+
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Procesando...';
+
+            try {
+                const res = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                if (res.ok) {
+                    if (isLoginMode) {
+                        const data = await res.json();
+                        localStorage.setItem('token', data.token);
+                        window.location.href = '/dashboard';
+                    } else {
+                        showAlert('Usuario creado. Ya puedes iniciar sesión.', 'success');
+                        setTimeout(() => toggleMode(), 2000);
+                    }
+                } else {
+                    showAlert(isLoginMode ? 'Usuario o contraseña incorrectos' : 'El usuario ya existe o los datos son inválidos', 'danger');
+                }
+            } catch {
+                showAlert('Error de conexión. Intenta de nuevo.', 'danger');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = isLoginMode ? '<i class="bi bi-box-arrow-in-right me-1"></i> Acceder al Curso' : '<i class="bi bi-person-plus me-1"></i> Registrar Usuario';
+            }
+        }
+
+        // Enter to submit
+        document.addEventListener('keydown', e => { if (e.key === 'Enter') handleAuth(); });
+    </script>
+</body>
+
+</html>

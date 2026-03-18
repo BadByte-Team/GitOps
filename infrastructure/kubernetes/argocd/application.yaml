@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: curso-gitops
+  namespace: argocd
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/TU_USUARIO/curso-gitops-manifests.git
+    targetRevision: main
+    path: infrastructure/kubernetes/app
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: curso-gitops
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PruneLast=true
