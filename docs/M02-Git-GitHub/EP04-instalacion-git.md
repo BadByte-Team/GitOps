@@ -1,4 +1,4 @@
-# EP 04: Instalación de Git y Configuración Inicial
+e# EP 04: Instalación de Git y Configuración Inicial
 
 **Tipo:** INSTALACIÓN / CONFIGURACIÓN  
 **Duración estimada:** 12–15 min  
