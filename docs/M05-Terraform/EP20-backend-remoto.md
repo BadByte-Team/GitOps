@@ -40,7 +40,7 @@ El cambio en el código es solo este bloque dentro de `terraform {}`:
 backend "s3" {
   bucket         = "curso-gitops-terraform-state"
   key            = "ec2-prod/terraform.tfstate"
-  region         = "us-east-1"
+  region         = "us-east-2"
   dynamodb_table = "curso-gitops-terraform-locks"
   encrypt        = true
 }
@@ -81,7 +81,7 @@ Es el episodio más corto del módulo, pero uno de los más importantes. Vamos."
 backend "s3" {
   bucket         = "curso-gitops-terraform-state"
   key            = "ec2-prod/terraform.tfstate"
-  region         = "us-east-1"
+  region         = "us-east-2"
   dynamodb_table = "curso-gitops-terraform-locks"
   encrypt        = true
 }
@@ -93,7 +93,7 @@ Voy a explicar cada propiedad porque las van a ver exactamente así en el proyec
 
 **`key`** — la ruta dentro del bucket donde se guarda el state. No es una clave de seguridad — es literalmente una ruta de archivo, como una carpeta. En nuestro caso, `ec2-prod/terraform.tfstate`. Cada directorio de Terraform del proyecto usa una ruta diferente para no sobreescribirse entre sí. Si el backend guardó su propio state en `backend/terraform.tfstate`, y la EC2 usa `ec2-prod/terraform.tfstate`, son dos archivos completamente independientes. Puedo destruir la EC2 sin tocar el backend, y viceversa.
 
-**`region`** — siempre `us-east-1` en este curso, la misma región donde creamos todo.
+**`region`** — siempre `us-east-2` en este curso, la misma región donde creamos todo.
 
 **`dynamodb_table`** — la tabla del EP17. Cuando Terraform empieza un `apply`, crea una entrada en esta tabla que dice 'estoy trabajando en este state ahora mismo, esperen'. Cuando termina, la borra. Si dos personas intentan hacer `apply` al mismo tiempo, la segunda ve el lock y espera. Sin esto, las dos podrían sobrescribir el state simultáneamente y corromperlo.
 
@@ -240,7 +240,7 @@ Nos vemos en el EP21."
 | `Error: Failed to get existing workspaces` | El bucket S3 no existe — ejecutar `terraform apply` en el directorio `backend/` primero |
 | `Error: Error acquiring the state lock` | Lock atascado de un apply previo — `terraform force-unlock LOCK_ID` |
 | `BucketAlreadyExists` | El nombre del bucket es global en S3 — agregar un sufijo único en `variables.tf` |
-| `NoSuchBucket` al hacer init | El bucket fue creado en una región diferente a `us-east-1` — verificar |
+| `NoSuchBucket` al hacer init | El bucket fue creado en una región diferente a `us-east-2` — verificar |
 
 ---
 

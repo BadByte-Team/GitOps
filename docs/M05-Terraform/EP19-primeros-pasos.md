@@ -33,14 +33,14 @@ El `~> 5.0` previene que una actualización mayor rompa la configuración.
 
 ### `provider {}` — cómo conectarse al servicio
 ```hcl
-provider "aws" { region = "us-east-1" }
+provider "aws" { region = "us-east-2" }
 ```
 Terraform usa `~/.aws/credentials` automáticamente. Solo especificamos la región.
 
 ### `resource {}` — lo que queremos crear
 ```hcl
 resource "aws_instance" "mi_servidor" {
-  ami           = "ami-0c7217cdde317cfec"
+  ami           = "ami-0d6d5a1f326b57cb0"
   instance_type = "t2.micro"
 }
 ```
@@ -107,7 +107,7 @@ terraform {
 
 ```hcl
 provider "aws" {
-  region = "us-east-1"
+  region = "us-east-2"
 }
 ```
 
@@ -119,7 +119,7 @@ provider "aws" {
 
 ```hcl
 resource "aws_instance" "mi_servidor" {
-  ami           = "ami-0c7217cdde317cfec"
+  ami           = "ami-0d6d5a1f326b57cb0"
   instance_type = "t2.micro"
 }
 ```
@@ -170,13 +170,13 @@ Empiezo por **`variables.tf`**:"
 variable "region" {
   description = "Region de AWS"
   type        = string
-  default     = "us-east-1"
+  default     = "us-east-2"
 }
 
 variable "ami_id" {
-  description = "AMI de Ubuntu 22.04 LTS en us-east-1"
+  description = "AMI de Ubuntu 22.04 LTS en us-east-2"
   type        = string
-  default     = "ami-0c7217cdde317cfec"
+  default     = "ami-0d6d5a1f326b57cb0"
 }
 
 variable "instance_type" {
@@ -284,7 +284,7 @@ La primera es el detalle de cada recurso:"
 ```
 # aws_instance.ejemplo will be created
 + resource "aws_instance" "ejemplo" {
-    + ami           = "ami-0c7217cdde317cfec"
+    + ami           = "ami-0d6d5a1f326b57cb0"
     + instance_type = "t2.micro"
     + tags          = { "Name" = "terraform-practica-ep19" }
   }
@@ -380,7 +380,7 @@ La única línea que todavía no hemos visto es esta:"
 backend "s3" {
   bucket         = "curso-gitops-terraform-state"
   key            = "ec2-prod/terraform.tfstate"
-  region         = "us-east-1"
+  region         = "us-east-2"
   dynamodb_table = "curso-gitops-terraform-locks"
   encrypt        = true
 }
@@ -414,7 +414,7 @@ Nos vemos en el EP20."
 | Problema | Solución |
 |---|---|
 | `Error: No valid credential sources found` | Verificar `~/.aws/credentials` con las claves del EP14 |
-| `Error: Invalid AMI ID` | La AMI `ami-0c7217cdde317cfec` es de `us-east-1` — verificar que la región en `variables.tf` es la correcta |
+| `Error: Invalid AMI ID` | La AMI `ami-0d6d5a1f326b57cb0` es de `us-east-2` — verificar que la región en `variables.tf` es la correcta |
 | `Error: configuring Terraform AWS Provider` | El usuario IAM `admin-curso` no tiene los permisos necesarios — verificar que tiene `AdministratorAccess` |
 
 ---

@@ -130,7 +130,7 @@ La instancia:"
 ```
 # aws_instance.prod_server will be created
 + resource "aws_instance" "prod_server" {
-    + ami           = "ami-0c7217cdde317cfec"
+    + ami           = "ami-0d6d5a1f326b57cb0"
     + instance_type = "t2.micro"
     + tags          = { "Name" = "Produccion-K3s" }
   }

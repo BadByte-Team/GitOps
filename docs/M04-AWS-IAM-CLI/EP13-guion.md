@@ -81,9 +81,9 @@ Click en 'Complete sign up'. La cuenta puede tardar unos minutos en activarse."
 
 "Voy a **console.aws.amazon.com** y me logueo con el email root y la contraseña.
 
-Lo primero que hago es seleccionar la región en el menú desplegable de la esquina superior derecha. La región que usaremos en todo el curso es **US East (N. Virginia) — us-east-1**.
+Lo primero que hago es seleccionar la región en el menú desplegable de la esquina superior derecha. La región que usaremos en todo el curso es **US East (N. Virginia) — us-east-2**.
 
-¿Por qué us-east-1? Tres razones: es la región más antigua y madura de AWS, tiene la mayor cantidad de servicios disponibles, y tiene los precios más bajos. Todos los recursos del curso — la EC2, el bucket S3, la tabla DynamoDB — los crearemos aquí.
+¿Por qué us-east-2? Tres razones: es la región más antigua y madura de AWS, tiene la mayor cantidad de servicios disponibles, y tiene los precios más bajos. Todos los recursos del curso — la EC2, el bucket S3, la tabla DynamoDB — los crearemos aquí.
 
 Manten **siempre** esta región seleccionada. Si en algún episodio creas algo y no lo encuentras, lo más probable es que estés mirando la región equivocada."
 

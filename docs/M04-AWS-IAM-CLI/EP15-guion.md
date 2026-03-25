@@ -68,7 +68,7 @@ cat ~/.aws/credentials
 cat ~/.aws/config
 ```
 
-"Debe mostrar el Access Key ID, el Secret Key, la región `us-east-1` y el output `json`.
+"Debe mostrar el Access Key ID, el Secret Key, la región `us-east-2` y el output `json`.
 
 Si por alguna razón los archivos no existen, lo más rápido es:"
 

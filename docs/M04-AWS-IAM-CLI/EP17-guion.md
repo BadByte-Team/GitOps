@@ -80,7 +80,7 @@ Son los dos recursos del curso que no tienen costo ni siquiera rozando el Free T
 ```bash
 aws s3api create-bucket \
   --bucket curso-gitops-terraform-state \
-  --region us-east-1
+  --region us-east-2
 
 aws s3 ls | grep curso-gitops
 # 2026-XX-XX curso-gitops-terraform-state
@@ -163,7 +163,7 @@ aws dynamodb create-table \
   --attribute-definitions AttributeName=LockID,AttributeType=S \
   --key-schema AttributeName=LockID,KeyType=HASH \
   --billing-mode PAY_PER_REQUEST \
-  --region us-east-1
+  --region us-east-2
 ```
 
 "El `PAY_PER_REQUEST` significa que no se cobra por capacidad reservada — solo por las operaciones que realmente se usan. Para el volumen de este curso, el costo es cero.
@@ -198,7 +198,7 @@ terraform {
   backend "s3" {
     bucket         = "curso-gitops-terraform-state"   ← el bucket que acabamos de crear
     key            = "ec2-prod/terraform.tfstate"     ← ruta dentro del bucket
-    region         = "us-east-1"
+    region         = "us-east-2"
     dynamodb_table = "curso-gitops-terraform-locks"   ← la tabla que acabamos de crear
     encrypt        = true
   }

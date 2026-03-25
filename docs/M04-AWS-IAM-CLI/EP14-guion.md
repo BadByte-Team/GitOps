@@ -136,7 +136,7 @@ También creo el archivo de configuración regional:"
 ```bash
 cat > ~/.aws/config << EOF
 [default]
-region = us-east-1
+region = us-east-2
 output = json
 EOF
 ```

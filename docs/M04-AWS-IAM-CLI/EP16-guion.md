@@ -35,7 +35,7 @@ Empecemos."
 
 La AMI es la fotografía del sistema operativo con la que arranca tu instancia. Es como el ISO de Ubuntu que usarías para instalar Linux — pero ya empaquetado y listo para la nube.
 
-AWS tiene AMIs oficiales de Ubuntu, Amazon Linux, Windows, y muchas más. Nosotros usaremos **Ubuntu 22.04 LTS** en la región us-east-1, cuyo ID es `ami-0c7217cdde317cfec`.
+AWS tiene AMIs oficiales de Ubuntu, Amazon Linux, Windows, y muchas más. Nosotros usaremos **Ubuntu 22.04 LTS** en la región us-east-2, cuyo ID es `ami-0d6d5a1f326b57cb0`.
 
 Ese ID lo verán en el Terraform del EP22. Ya saben qué es.
 
@@ -162,7 +162,7 @@ aws ec2 authorize-security-group-ingress \
 
 ```bash
 INSTANCE_ID=$(aws ec2 run-instances \
-  --image-id ami-0c7217cdde317cfec \
+  --image-id ami-0d6d5a1f326b57cb0 \
   --instance-type t2.micro \
   --key-name practica-ep16 \
   --security-group-ids $SG_ID \
