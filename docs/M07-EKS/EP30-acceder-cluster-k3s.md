@@ -272,7 +272,7 @@ kubectl top nodes
 
 > *Pantalla: terminal local.*
 
-"Una cosa práctica importante para el resto del curso. La IP pública de una instancia t2.micro **cambia cuando la instancia se reinicia**. Si en algún momento kubectl empieza a fallar con `connection refused` después de que la EC2 se reinició, el kubeconfig tiene una IP desactualizada.
+"Una cosa práctica importante para el resto del curso. La IP pública de una instancia t3.micro **cambia cuando la instancia se reinicia**. Si en algún momento kubectl empieza a fallar con `connection refused` después de que la EC2 se reinició, el kubeconfig tiene una IP desactualizada.
 
 La solución es simple — actualizar el kubeconfig con la nueva IP:"
 

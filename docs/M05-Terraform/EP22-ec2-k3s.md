@@ -3,12 +3,12 @@
 **Tipo:** PRÁCTICA
 **Duración estimada:** 12–15 min
 **Dificultad:** ⭐⭐ (Intermedio)
-**🔄 MODIFICADO:** En lugar de una t2.medium para Jenkins, se provisiona una t2.micro (capa gratuita) preparada para K3s, abriendo los puertos 30080 (ArgoCD) y 30081 (App).
+**🔄 MODIFICADO:** En lugar de una t2.medium para Jenkins, se provisiona una t3.micro (capa gratuita) preparada para K3s, abriendo los puertos 30080 (ArgoCD) y 30081 (App).
 
 ---
 
 ## 🎯 Objetivo
-Usar Terraform para crear la EC2 t2.micro definitiva del curso — el servidor que correrá K3s, ArgoCD y la app Go — con su Security Group configurado y disco de 30 GB. Conectar por SSH y verificar los recursos del sistema.
+Usar Terraform para crear la EC2 t3.micro definitiva del curso — el servidor que correrá K3s, ArgoCD y la app Go — con su Security Group configurado y disco de 30 GB. Conectar por SSH y verificar los recursos del sistema.
 
 ---
 
@@ -19,12 +19,12 @@ Usar Terraform para crear la EC2 t2.micro definitiva del curso — el servidor q
 
 ---
 
-## 💰 ¿Por qué t2.micro y no t2.medium?
+## 💰 ¿Por qué t3.micro y no t2.medium?
 
 | Instancia | RAM | Costo/mes | ¿Gratis? | Rol en el curso |
 |---|---|---|---|---|
 | t2.medium (original) | 4 GB | ~$33 USD | ❌ | Jenkins en AWS |
-| t2.micro (actual) | 1 GB | $0 | ✅ Free Tier | K3s + ArgoCD + App |
+| t3.micro (actual) | 1 GB | $0 | ✅ Free Tier | K3s + ArgoCD + App |
 
 La decisión que hace posible el $0: **Jenkins corre en tu máquina local** (EP31). La EC2 solo tiene responsabilidad de producción. Con el Swap del EP28, 1 GB de RAM es suficiente para K3s, ArgoCD, MySQL y la app.
 
@@ -34,7 +34,7 @@ La decisión que hace posible el $0: **Jenkins corre en tu máquina local** (EP3
 
 ### INTRO (0:00 – 1:30)
 
-> *Pantalla: dos ventanas lado a lado. Izquierda: calculadora de precios de AWS mostrando ~$100/mes para EKS + EC2 t2.medium. Derecha: `variables.tf` con `instance_type = "t2.micro"` y el comentario `(Capa Gratuita)` visible.*
+> *Pantalla: dos ventanas lado a lado. Izquierda: calculadora de precios de AWS mostrando ~$100/mes para EKS + EC2 t2.medium. Derecha: `variables.tf` con `instance_type = "t3.micro"` y el comentario `(Capa Gratuita)` visible.*
 
 "Bienvenidos al episodio 22.
 
@@ -42,7 +42,7 @@ Llevamos cuatro episodios preparando el terreno: instalamos Terraform, aprendimo
 
 Hoy creamos el servidor de producción del curso. Y quiero que veamos primero esto — el costo de la arquitectura original de este tipo de cursos. EKS para el cluster, una EC2 para Jenkins, un LoadBalancer para exponer la app. Más de cien dólares al mes. Y eso si lo destruyes al terminar cada sesión de práctica.
 
-Ahora miren el `variables.tf` de nuestro proyecto. `instance_type = 't2.micro'`. Capa gratuita de AWS. Costo cero.
+Ahora miren el `variables.tf` de nuestro proyecto. `instance_type = 't3.micro'`. Capa gratuita de AWS. Costo cero.
 
 ¿Cómo es posible con solo 1 GB de RAM en un solo servidor? Porque tomamos decisiones de arquitectura inteligentes. Jenkins no está en AWS — corre en tu máquina local, la vemos en el EP31. ArgoCD se expone con NodePort en lugar de un LoadBalancer. Y K3s en lugar de EKS elimina completamente el costo del control plane.
 
@@ -68,7 +68,7 @@ El **30081** es el puerto de nuestra app Go. Cuando el EP40 complete el desplieg
 
 Lo importante de esto es que estos tres puertos están configurados desde el día uno. No tenemos que volver a Terraform en el EP39 ni en el EP40 a agregar reglas. La infraestructura ya está lista para recibir lo que viene.
 
-El segundo recurso es la **instancia EC2**. Ubuntu 22.04 LTS, tipo `t2.micro`, disco de 30 GB en formato gp3 encriptado. ¿Por qué 30 GB y no los 8 GB del default? Porque K3s descarga imágenes Docker al pull los contenedores — cada imagen puede ser varios cientos de megabytes — y con 8 GB nos quedaríamos sin espacio."
+El segundo recurso es la **instancia EC2**. Ubuntu 22.04 LTS, tipo `t3.micro`, disco de 30 GB en formato gp3 encriptado. ¿Por qué 30 GB y no los 8 GB del default? Porque K3s descarga imágenes Docker al pull los contenedores — cada imagen puede ser varios cientos de megabytes — y con 8 GB nos quedaríamos sin espacio."
 
 ---
 
@@ -131,12 +131,12 @@ La instancia:"
 # aws_instance.prod_server will be created
 + resource "aws_instance" "prod_server" {
     + ami           = "ami-0d6d5a1f326b57cb0"
-    + instance_type = "t2.micro"
+    + instance_type = "t3.micro"
     + tags          = { "Name" = "Produccion-K3s" }
   }
 ```
 
-"`t2.micro`. El tag `Produccion-K3s` — ese nombre lo usaremos después para filtrar la instancia con la CLI.
+"`t3.micro`. El tag `Produccion-K3s` — ese nombre lo usaremos después para filtrar la instancia con la CLI.
 
 Y el resumen:"
 
@@ -318,7 +318,7 @@ Eso es exactamente lo que significa tener infraestructura como código."
 
 "Eso es el episodio 22.
 
-El servidor de producción del curso está corriendo en AWS. Una sola instancia t2.micro, Free Tier, costo cero. Con su Security Group, sus tres puertos, y su disco de 30 GB. Todo descrito en código, versionado en Git, y el state guardado en S3.
+El servidor de producción del curso está corriendo en AWS. Una sola instancia t3.micro, Free Tier, costo cero. Con su Security Group, sus tres puertos, y su disco de 30 GB. Todo descrito en código, versionado en Git, y el state guardado en S3.
 
 Esta instancia no la vamos a destruir hasta el EP49. A partir de aquí, todos los módulos de Kubernetes y GitOps asumen que este servidor existe.
 
@@ -347,13 +347,13 @@ Nos vemos en el EP23."
 | `Permission denied (publickey)` | El archivo no tiene los permisos correctos: `chmod 400 aws-key.pem` |
 | `UNPROTECTED PRIVATE KEY FILE` | Mismo problema de permisos: `chmod 400 aws-key.pem` |
 | `terraform plan` falla con error de backend | `terraform init` no fue ejecutado — ver EP20 |
-| La IP pública cambió | La IP de t2.micro cambia al reiniciar la instancia — obtener la nueva con `terraform output prod_public_ip` |
+| La IP pública cambió | La IP de t3.micro cambia al reiniciar la instancia — obtener la nueva con `terraform output prod_public_ip` |
 | `Connection timed out` al hacer SSH | La instancia todavía está arrancando — esperar 60 segundos y volver a intentar |
 
 ---
 
 ## 🗒️ Notas de Producción
-- La apertura con las dos ventanas — calculadora de AWS vs el `variables.tf` con `t2.micro` — es el contraste visual más poderoso del módulo. Prepararlo de antemano para que no haya demoras en el momento de la grabación.
+- La apertura con las dos ventanas — calculadora de AWS vs el `variables.tf` con `t3.micro` — es el contraste visual más poderoso del módulo. Prepararlo de antemano para que no haya demoras en el momento de la grabación.
 - Al leer el `terraform plan` en voz alta, señalar con el cursor en la terminal cada sección mientras la describes — refuerza la conexión entre la voz y el texto en pantalla.
 - El `free -h` dentro de la instancia mostrando `Swap: 0B` es el momento exacto para anticipar el EP28 — decirlo en voz alta crea la expectativa sin desviar el foco.
 - Al mostrar el state en S3, el tono debe ser de cierre narrativo — "el ciclo que empezó en el EP17 se completa aquí" — no técnico sino emocional. Es el payoff del módulo.

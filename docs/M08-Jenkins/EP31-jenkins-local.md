@@ -25,7 +25,7 @@ En la arquitectura original, Jenkins vivía en una EC2 t2.medium. En la arquitec
 | Componente | Dónde vive | Costo |
 |---|---|---|
 | Jenkins + SonarQube | Tu PC local (Docker Compose) | $0 |
-| K3s + ArgoCD + App | EC2 t2.micro (AWS Free Tier) | $0 |
+| K3s + ArgoCD + App | EC2 t3.micro (AWS Free Tier) | $0 |
 | **Total** | | **$0** |
 
 Jenkins en tu PC tiene además una ventaja técnica real: acceso directo al Docker daemon local para construir imágenes. Sin configuración adicional, sin permisos especiales de red, sin tokens de autenticación entre Jenkins y Docker.
@@ -66,7 +66,7 @@ Tu PC Local
 
        ↓ git push a gitops-infra
        
-EC2 t2.micro (AWS)
+EC2 t3.micro (AWS)
 └── K3s → ArgoCD detecta el cambio → despliega la nueva versión
 ```
 

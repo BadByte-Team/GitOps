@@ -61,13 +61,13 @@ El paradigma se llama **Infrastructure as Code** — Infraestructura como Códig
 
 Eso tiene tres consecuencias inmediatas que importan para el curso.
 
-La primera es **reproducibilidad**. Si el archivo dice 'quiero una EC2 t2.micro con Ubuntu 22.04 y 30 GB de disco', Terraform va a crear exactamente eso. Hoy, mañana, en otra cuenta de AWS. Siempre lo mismo. El entorno de producción del curso se puede recrear desde cero en dos minutos con un solo comando.
+La primera es **reproducibilidad**. Si el archivo dice 'quiero una EC2 t3.micro con Ubuntu 22.04 y 30 GB de disco', Terraform va a crear exactamente eso. Hoy, mañana, en otra cuenta de AWS. Siempre lo mismo. El entorno de producción del curso se puede recrear desde cero en dos minutos con un solo comando.
 
-La segunda es **historial**. Cada cambio a los archivos de infraestructura es un commit de Git. Si en algún momento alguien cambia el tipo de instancia de `t2.micro` a algo más caro, ese cambio queda registrado en el repositorio con fecha y mensaje de commit. No hay cambios silenciosos que nadie recuerde haber hecho.
+La segunda es **historial**. Cada cambio a los archivos de infraestructura es un commit de Git. Si en algún momento alguien cambia el tipo de instancia de `t3.micro` a algo más caro, ese cambio queda registrado en el repositorio con fecha y mensaje de commit. No hay cambios silenciosos que nadie recuerde haber hecho.
 
 La tercera es **destrucción limpia**. Cuando en el EP49 terminemos el curso, `terraform destroy` va a eliminar todo lo que Terraform creó, en el orden correcto, sin dejar recursos huérfanos que sigan generando costos. Sin tener que recordar manualmente qué existía ni en qué secuencia eliminarlo.
 
-Para este curso, Terraform hace exactamente una cosa: crear la EC2 t2.micro donde vive K3s, con el Security Group correcto. Pero el patrón que aprendes hoy es el mismo que usan equipos de ingeniería para gestionar cientos de recursos en producción."
+Para este curso, Terraform hace exactamente una cosa: crear la EC2 t3.micro donde vive K3s, con el Security Group correcto. Pero el patrón que aprendes hoy es el mismo que usan equipos de ingeniería para gestionar cientos de recursos en producción."
 
 ---
 
@@ -155,7 +155,7 @@ source ~/.bashrc
 
 El `main.tf` es el corazón. Aquí van los recursos que Terraform va a crear en AWS: la EC2, el Security Group, lo que sea.
 
-El `variables.tf` parametriza los valores que pueden cambiar entre entornos. En lugar de escribir `t2.micro` directamente dentro del resource, lo conviertes en una variable y lo usas con `var.instance_type`. Si mañana necesitas cambiar el tipo de instancia, cambias un solo lugar y el cambio se propaga a todo el archivo.
+El `variables.tf` parametriza los valores que pueden cambiar entre entornos. En lugar de escribir `t3.micro` directamente dentro del resource, lo conviertes en una variable y lo usas con `var.instance_type`. Si mañana necesitas cambiar el tipo de instancia, cambias un solo lugar y el cambio se propaga a todo el archivo.
 
 El `outputs.tf` define qué valores te devuelve Terraform cuando termina de crear todo. Por ejemplo, después de crear la EC2, Terraform imprime la IP pública en la terminal. Eso es un output.
 

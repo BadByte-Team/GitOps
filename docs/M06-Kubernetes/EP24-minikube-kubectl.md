@@ -23,7 +23,7 @@ Una pregunta válida: si en el EP28 vamos a instalar K3s en la EC2, ¿para qué 
 
 | | Minikube (EP24–26) | K3s en EC2 (EP27–30) |
 |---|---|---|
-| **Dónde corre** | Tu máquina local | AWS EC2 t2.micro |
+| **Dónde corre** | Tu máquina local | AWS EC2 t3.micro |
 | **Propósito** | Práctica y aprendizaje | Producción del curso |
 | **Costo** | $0 | $0 (Free Tier) |
 | **Velocidad de setup** | 2 minutos | ~5 minutos |

@@ -134,7 +134,7 @@ Events:
 
 `Failed to pull image "...": not found` — la imagen no existe. Revisa el nombre y el tag en el YAML.
 
-`Insufficient memory` — el nodo no tiene suficiente RAM. En nuestro t2.micro esto puede ocurrir si hay demasiados Pods corriendo sin límites de memoria.
+`Insufficient memory` — el nodo no tiene suficiente RAM. En nuestro t3.micro esto puede ocurrir si hay demasiados Pods corriendo sin límites de memoria.
 
 `Back-off restarting failed container` — el contenedor se cayó varias veces. Mira los logs para ver qué error tiene la aplicación.
 

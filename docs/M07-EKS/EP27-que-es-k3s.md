@@ -13,7 +13,7 @@ Entender por qué EKS no es viable para este curso, qué es K3s y por qué es un
 ---
 
 ## 📋 Prerequisitos
-- EC2 t2.micro corriendo (EP22)
+- EC2 t3.micro corriendo (EP22)
 - Conceptos de Kubernetes dominados (EP23)
 - Minikube detenido: `minikube stop`
 
@@ -84,7 +84,7 @@ La API es la misma. Los manifiestos YAML son los mismos. kubectl funciona exacta
 
 La diferencia técnica está en cómo está construido internamente. Kubernetes estándar distribuye sus componentes en múltiples binarios: el API server corre por un lado, el scheduler por otro, el controller manager por otro, etcd separado. Cada uno es un proceso independiente.
 
-K3s empaqueta todo eso en un único binario de ~70 MB. El resultado es que puede correr en una máquina con 512 MB de RAM, frente a los 2 GB que necesita Kubernetes estándar. Para nuestra EC2 t2.micro con 1 GB de RAM física más 2 GB de Swap, eso es exactamente lo que necesitamos.
+K3s empaqueta todo eso en un único binario de ~70 MB. El resultado es que puede correr en una máquina con 512 MB de RAM, frente a los 2 GB que necesita Kubernetes estándar. Para nuestra EC2 t3.micro con 1 GB de RAM física más 2 GB de Swap, eso es exactamente lo que necesitamos.
 
 ---
 
@@ -94,7 +94,7 @@ La respuesta es no, y sí respectivamente.
 
 K3s es la distribución elegida para **edge computing** — los dispositivos que necesitan correr Kubernetes en condiciones de hardware limitado. Chick-fil-A usa K3s en los sistemas de punto de venta de sus restaurantes. Tesla lo usa en sus vehículos. Organismos como la NASA lo usan en sistemas embebidos de misiones espaciales.
 
-Para nuestro curso, K3s corre en una EC2 t2.micro y nos da exactamente lo mismo que EKS: pods, deployments, services, namespaces, y soporte completo para ArgoCD. La diferencia es que no pagamos nada."
+Para nuestro curso, K3s corre en una EC2 t3.micro y nos da exactamente lo mismo que EKS: pods, deployments, services, namespaces, y soporte completo para ArgoCD. La diferencia es que no pagamos nada."
 
 ---
 
@@ -104,10 +104,10 @@ Para nuestro curso, K3s corre en una EC2 t2.micro y nos da exactamente lo mismo 
 
 "Antes de arrancar con los comandos, quiero que vean el mapa completo de lo que construiremos en este módulo y cómo encaja en el stack final del curso.
 
-Todo vive en la misma EC2 t2.micro que creamos en el EP22:"
+Todo vive en la misma EC2 t3.micro que creamos en el EP22:"
 
 ```
-EC2 t2.micro — Ubuntu 22.04 — Free Tier AWS
+EC2 t3.micro — Ubuntu 22.04 — Free Tier AWS
 │
 ├── 2 GB Swap               ← EP28 — sin esto K3s colapsa
 │
@@ -138,9 +138,9 @@ Después de eso, los episodios de Jenkins y ArgoCD construyen encima de este clu
 
 | Aspecto | EKS (original) | K3s (nuestro) |
 |---|---|---|
-| Cluster | EKS en AWS (~$72/mes) | K3s en EC2 t2.micro ($0) |
+| Cluster | EKS en AWS (~$72/mes) | K3s en EC2 t3.micro ($0) |
 | Control Plane | Gestionado por AWS | En la misma EC2 |
-| Nodos | 2× t3.medium separados | La misma EC2 t2.micro |
+| Nodos | 2× t3.medium separados | La misma EC2 t3.micro |
 | LoadBalancer | AWS ALB (~$20/mes) | NodePort (gratis) |
 | Configurar kubectl | `aws eks update-kubeconfig` | Copiar y editar `k3s.yaml` |
 | kubectl | Idéntico | Idéntico |
@@ -192,7 +192,7 @@ Nos vemos en el EP28."
 - [ ] Entiendes que K3s está certificado por la CNCF — no es un fork no oficial
 - [ ] Sabes que kubectl y los manifiestos YAML son idénticos en K3s y EKS
 - [ ] Puedes describir la arquitectura de lo que construiremos en EP28–30
-- [ ] La EC2 t2.micro del EP22 está corriendo (`running`)
+- [ ] La EC2 t3.micro del EP22 está corriendo (`running`)
 
 ---
 

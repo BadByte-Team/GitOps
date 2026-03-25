@@ -39,6 +39,15 @@ AWS tiene AMIs oficiales de Ubuntu, Amazon Linux, Windows, y muchas más. Nosotr
 
 Ese ID lo verán en el Terraform del EP22. Ya saben qué es.
 
+Cómo ver las AMIs disponibles y más actualizadas de la us-east-2.
+
+```shell
+aws ec2 describe-images --region us-east-2 \
+--owners 099720109477 \
+--filters "Name=name,Values=ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-amd64-server-*" \
+--query 'sort_by(Images, &CreationDate)[-1].ImageId' --output text
+```
+
 ---
 
 **Tipo de instancia**
@@ -47,10 +56,10 @@ Define cuánta CPU y RAM tiene tu servidor.
 
 | Tipo | vCPU | RAM | Free Tier |
 |---|---|---|---|
-| t2.micro | 1 | 1 GB | ✅ 750 hrs/mes |
+| t3.micro | 1 | 1 GB | ✅ 750 hrs/mes |
 | t2.medium | 2 | 4 GB | ❌ ~$33/mes |
 
-Usaremos **t2.micro** en todo el curso. Sí, 1 GB de RAM es poco. Por eso en el EP28 vamos a configurar Swap — memoria virtual que le permite a K3s y ArgoCD coexistir sin matar la instancia. Ya llegamos a eso.
+Usaremos **t3.micro** en todo el curso. Sí, 1 GB de RAM es poco. Por eso en el EP28 vamos a configurar Swap — memoria virtual que le permite a K3s y ArgoCD coexistir sin matar la instancia. Ya llegamos a eso.
 
 ---
 
@@ -158,12 +167,30 @@ aws ec2 authorize-security-group-ingress \
 
 > *Pantalla: terminal.*
 
+"Antes de crear una instancia, vamos a comprobar qué instancias son parte del Free Tier con este comando"
+
+```shell
+aws ec2 describe-instance-types \  
+ --filters Name=free-tier-eligible,Values=true \  
+ --query "InstanceTypes[*].InstanceType"
+```
+
+"Entre las instancias disponibles, la que elegiremos es la de tipo t3.micro, pero antes comprobamos que existe en nuestra region"
+
+```shell
+aws ec2 describe-instance-type-offerings \  
+ --location-type region \  
+ --filters Name=instance-type,Values=t3.micro
+```
+
+"Entonces, ahora que comprobamos que sí existe, podemos continuar con la creación de nuestra instancia"
+
 "Con el key pair y el Security Group listos, lanzo la instancia:"
 
 ```bash
 INSTANCE_ID=$(aws ec2 run-instances \
   --image-id ami-0d6d5a1f326b57cb0 \
-  --instance-type t2.micro \
+  --instance-type t3.micro \
   --key-name practica-ep16 \
   --security-group-ids $SG_ID \
   --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=practica-ep16}]' \
@@ -201,7 +228,7 @@ echo "IP Pública: $PUBLIC_IP"
 ```bash
 sleep 30
 
-ssh -i practica-ep16.pem ubuntu@$PUBLIC_IP
+	ssh -i practica-ep16.pem ubuntu@$PUBLIC_IP
 ```
 
 "La primera vez pregunta:"

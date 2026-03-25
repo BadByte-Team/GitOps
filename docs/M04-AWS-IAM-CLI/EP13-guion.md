@@ -15,7 +15,7 @@ Hoy entramos a AWS. Y lo primero que quiero mostrarte antes de crear cualquier c
 
 Esto es lo que costaría el stack clásico de un curso de GitOps: EKS para el cluster, una EC2 para Jenkins, un LoadBalancer para exponer la app. Más de cien dólares al mes. Y si olvidas destruirlo un fin de semana, ese cargo llega a tu tarjeta sin aviso.
 
-Este curso no funciona así. En nuestro diseño, la arquitectura completa corre en **una sola instancia t2.micro — la capa gratuita de AWS — y cuesta cero pesos, cero dólares**. Jenkins, SonarQube y Trivy corren en tu máquina local. ArgoCD y tu app corren en K3s sobre esa única EC2 gratuita.
+Este curso no funciona así. En nuestro diseño, la arquitectura completa corre en **una sola instancia t3.micro — la capa gratuita de AWS — y cuesta cero pesos, cero dólares**. Jenkins, SonarQube y Trivy corren en tu máquina local. ArgoCD y tu app corren en K3s sobre esa única EC2 gratuita.
 
 Pero para usar AWS, incluso gratis, necesitas una cuenta. Y esa cuenta necesita configurarse bien desde el día uno para que nunca recibas una sorpresa en el estado de cuenta.
 
@@ -53,7 +53,7 @@ Ahora la parte que le genera ansiedad a todo el mundo: **el método de pago**.
 
 AWS requiere una tarjeta de débito o crédito para verificar que eres una persona real. Va a realizar un **cargo de verificación de $1 USD** — ese dólar se devuelve en 3 a 5 días hábiles. No es un cobro real.
 
-Lo importante: si usas Free Tier correctamente — y en este curso te mostraré exactamente cómo hacerlo — **no recibirás ningún cargo**. El único recurso que usaremos que podría generar costo es la EC2 t2.micro, y esa tiene 750 horas mensuales gratis durante el primer año.
+Lo importante: si usas Free Tier correctamente — y en este curso te mostraré exactamente cómo hacerlo — **no recibirás ningún cargo**. El único recurso que usaremos que podría generar costo es la EC2 t3.micro, y esa tiene 750 horas mensuales gratis durante el primer año.
 
 Ingreso los datos de la tarjeta y continúo.
 
@@ -167,7 +167,7 @@ Antes de cerrar, el resumen de lo que cuesta nuestro stack en este curso:
 
 | Recurso | Free Tier | Costo real |
 |---|---|---|
-| EC2 t2.micro | 750 hrs/mes gratis | $0 |
+| EC2 t3.micro | 750 hrs/mes gratis | $0 |
 | S3 backend | 5 GB gratis | $0 |
 | DynamoDB | Siempre gratis | $0 |
 | Jenkins local | En tu PC | $0 |

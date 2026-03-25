@@ -3,7 +3,7 @@
 **Tipo:** CONFIGURACIÓN
 **Duración estimada:** 8–10 min
 **Dificultad:** ⭐ (Básico)
-**🔄 MODIFICADO:** Episodio completamente nuevo. Enseña a crear memoria virtual (Swap) en Linux — paso vital para que K3s no colapse la instancia t2.micro de 1 GB de RAM.
+**🔄 MODIFICADO:** Episodio completamente nuevo. Enseña a crear memoria virtual (Swap) en Linux — paso vital para que K3s no colapse la instancia t3.micro de 1 GB de RAM.
 
 ---
 
@@ -13,7 +13,7 @@ Crear un archivo de Swap de 2 GB en la EC2 y hacerlo persistente entre reinicios
 ---
 
 ## 📋 Prerequisitos
-- EC2 t2.micro corriendo (EP22)
+- EC2 t3.micro corriendo (EP22)
 - IP pública de la instancia anotada
 - Archivo `aws-key.pem` con permisos 400
 
@@ -63,7 +63,7 @@ Estoy conectado al servidor que creamos en el EP22. Y lo primero que hago cada v
 free -h
 ```
 
-"Miren la línea de Swap: cero. Ni un solo byte de memoria virtual. Solo el 1 GB de RAM física de la instancia t2.micro.
+"Miren la línea de Swap: cero. Ni un solo byte de memoria virtual. Solo el 1 GB de RAM física de la instancia t3.micro.
 
 Ahora piensen en lo que vamos a correr en este mismo servidor cuando terminemos el módulo. K3s necesita sus procesos del control plane. ArgoCD tiene aproximadamente siete pods propios. MySQL necesita su memoria para las conexiones y el cache. La app Go. El sistema operativo.
 

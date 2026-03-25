@@ -234,5 +234,5 @@ Nos vemos en el EP39."
 ## 🗒️ Notas de Producción
 - El `kubectl get pods -n argocd -w` es uno de los momentos más visuales del módulo — ver los pods cambiar de estado en tiempo real. Mantener la terminal en pantalla completa con fuente grande.
 - Mencionar cada pod mientras aparece en Running y recordar brevemente su función — conecta la teoría del EP37 con lo que se ve en pantalla.
-- Si algún pod tarda más de 3 minutos, explicar que es normal en una t2.micro — la descarga de imágenes puede ser lenta la primera vez.
+- Si algún pod tarda más de 3 minutos, explicar que es normal en una t3.micro — la descarga de imágenes puede ser lenta la primera vez.
 - El `kubectl get svc -n argocd` al final anticipa el EP39 de forma natural — "el `argocd-server` está en ClusterIP, en el próximo episodio lo exponemos".

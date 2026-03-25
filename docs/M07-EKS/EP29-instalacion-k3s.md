@@ -13,7 +13,7 @@ Instalar K3s en la EC2 con el script oficial de instalación, configurar los per
 ---
 
 ## 📋 Prerequisitos
-- EC2 t2.micro con Swap de 2 GB configurado (EP28)
+- EC2 t3.micro con Swap de 2 GB configurado (EP28)
 - Conectividad SSH a la instancia
 
 ---

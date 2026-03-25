@@ -12,7 +12,7 @@ Entender los tres objetos fundamentales de Kubernetes — Pod, Deployment y Serv
 ---
 
 ## 📋 Prerequisitos
-- EC2 t2.micro creada (EP22) — el servidor donde instalaremos K3s en el EP28
+- EC2 t3.micro creada (EP22) — el servidor donde instalaremos K3s en el EP28
 - Ningún prerequisito técnico para este episodio — es teoría pura
 
 ---
@@ -25,7 +25,7 @@ Entender los tres objetos fundamentales de Kubernetes — Pod, Deployment y Serv
 │                                                      │
 │  ┌──────────────────────────────────────────────┐   │
 │  │                   NODE                        │   │
-│  │   (nuestra EC2 t2.micro)                     │   │
+│  │   (nuestra EC2 t3.micro)                     │   │
 │  │                                               │   │
 │  │   ┌─────────────┐   ┌─────────────┐         │   │
 │  │   │     Pod     │   │     Pod     │         │   │
@@ -43,7 +43,7 @@ Entender los tres objetos fundamentales de Kubernetes — Pod, Deployment y Serv
                       Internet
 ```
 
-En K3s (nuestro caso), el control plane y el nodo de trabajo viven en la misma máquina — la EC2 t2.micro del EP22. En EKS o GKE, estarían separados. La API es exactamente la misma.
+En K3s (nuestro caso), el control plane y el nodo de trabajo viven en la misma máquina — la EC2 t3.micro del EP22. En EKS o GKE, estarían separados. La API es exactamente la misma.
 
 ---
 
@@ -83,7 +83,7 @@ Los **nodes** son los músculos. Son las máquinas donde realmente corren tus ap
 
 En la arquitectura original del curso, el control plane vivía en EKS — el servicio administrado de AWS — y los nodes eran instancias EC2 separadas. Eso costaba ~$72 al mes solo por el control plane.
 
-En nuestra arquitectura gratuita, usamos **K3s**: una distribución certificada de Kubernetes donde el control plane y el node corren en la misma máquina — nuestra EC2 t2.micro del EP22. Sin costo adicional, con la misma API, con los mismos manifiestos YAML.
+En nuestra arquitectura gratuita, usamos **K3s**: una distribución certificada de Kubernetes donde el control plane y el node corren en la misma máquina — nuestra EC2 t3.micro del EP22. Sin costo adicional, con la misma API, con los mismos manifiestos YAML.
 
 Cuando lleguen al EP27, instalar K3s va a ser un solo comando `curl`. Pero antes de eso, necesitamos entender qué va a correr ahí."
 
@@ -216,4 +216,4 @@ Nos vemos en el EP24."
 - El diagrama de arquitectura del cluster puede presentarse como slide o dibujarse en vivo. Si se dibuja en vivo, hacerlo despacio y verbalizando cada componente mientras aparece.
 - Al hablar del rolling update del Deployment, describir el proceso paso a paso: "Pod nuevo → espera sano → elimina viejo". Ese proceso es exactamente lo que verán en el EP48 cuando el pipeline despliegue una nueva versión.
 - Al mostrar los archivos YAML al final, no leer el contenido — solo señalar cada archivo y nombrar qué objeto de Kubernetes representa. El contenido se ve en el EP25.
-- Mencionar explícitamente que el `replicas: 1` en el `deployment.yaml` es una decisión de arquitectura consciente para el t2.micro — no un error ni una limitación técnica de Kubernetes.
+- Mencionar explícitamente que el `replicas: 1` en el `deployment.yaml` es una decisión de arquitectura consciente para el t3.micro — no un error ni una limitación técnica de Kubernetes.

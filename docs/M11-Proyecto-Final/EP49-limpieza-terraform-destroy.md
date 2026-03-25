@@ -43,7 +43,7 @@ Esta instancia EC2 ha estado corriendo durante todo el módulo de Kubernetes y G
 
 Ahora la vamos a destruir.
 
-No porque dejó de ser útil — sino porque en un entorno de aprendizaje, saber cuándo y cómo limpiar los recursos es tan importante como saber crearlos. El Free Tier de AWS tiene 750 horas mensuales de t2.micro. Si no destruyes la instancia al terminar el curso, esas horas se siguen consumiendo. Y cuando el primer año termina, los cargos empiezan.
+No porque dejó de ser útil — sino porque en un entorno de aprendizaje, saber cuándo y cómo limpiar los recursos es tan importante como saber crearlos. El Free Tier de AWS tiene 750 horas mensuales de t3.micro. Si no destruyes la instancia al terminar el curso, esas horas se siguen consumiendo. Y cuando el primer año termina, los cargos empiezan.
 
 Terraform Destroy elimina todo lo que Terraform creó, en el orden correcto, sin dejar recursos huérfanos. Un solo comando.
 
@@ -111,7 +111,7 @@ Terraform will perform the following actions:
   # aws_instance.prod_server will be destroyed
   - resource "aws_instance" "prod_server" {
       - ami           = "ami-0d6d5a1f326b57cb0"
-      - instance_type = "t2.micro"
+      - instance_type = "t3.micro"
       - tags          = { "Name" = "Produccion-K3s" }
     }
 
@@ -256,7 +256,7 @@ Empezaste con una PC y una cuenta de GitHub. Cuarenta y nueve episodios después
 
 **Un pipeline de CI completo** corriendo en tu máquina local. Jenkins que clona el código, SonarQube que analiza su calidad, Docker que construye la imagen, Trivy que la escanea en busca de vulnerabilidades, y un push automático a Docker Hub con tags versionados y trazables.
 
-**Un cluster de Kubernetes en la nube** — K3s en una EC2 t2.micro de la capa gratuita de AWS. Con Swap configurado para que no colapse bajo la carga, con ArgoCD instalado y expuesto via NodePort, y con kubectl configurado en tu laptop para operarlo remotamente sin SSH.
+**Un cluster de Kubernetes en la nube** — K3s en una EC2 t3.micro de la capa gratuita de AWS. Con Swap configurado para que no colapse bajo la carga, con ArgoCD instalado y expuesto via NodePort, y con kubectl configurado en tu laptop para operarlo remotamente sin SSH.
 
 **Un flujo GitOps funcionando de extremo a extremo.** Un commit en `gitops-app` → Jenkins actualiza `gitops-infra` → ArgoCD detecta el cambio → K3s hace el rolling update → la nueva versión está en producción. Sin intervención manual. Sin tocar el servidor directamente.
 
@@ -297,7 +297,7 @@ Nos vemos en el próximo curso."
 
 **Módulo 05 — Terraform**
 - [ ] Backend S3 + DynamoDB para el state
-- [ ] EC2 t2.micro destruida limpiamente
+- [ ] EC2 t3.micro destruida limpiamente
 
 **Módulo 06 — Kubernetes**
 - [ ] Conceptos Pod, Deployment, Service dominados

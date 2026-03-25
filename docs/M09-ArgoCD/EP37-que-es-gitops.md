@@ -103,7 +103,7 @@ Esos tres beneficios juntos son los que hacen que GitOps sea el estándar de la 
                                ▼
                     ┌─────────────────────┐
                     │   K3s Cluster       │
-                    │   (EC2 t2.micro)    │
+                    │   (EC2 t3.micro)    │
                     │   Pod corriendo:    │
                     │   image: app:0-xyz  │  ← estado actual
                     └──────────┬──────────┘
@@ -148,7 +148,7 @@ Tu PC Local                          GitHub
     6. sed actualiza tag                   │                         │
     7. git push ────────────────────────────────────────────────────┘
 
-                          AWS EC2 t2.micro
+                          AWS EC2 t3.micro
                           K3s Cluster
                           └── namespace: argocd
                               └── ArgoCD

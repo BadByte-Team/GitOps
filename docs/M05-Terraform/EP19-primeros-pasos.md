@@ -41,7 +41,7 @@ Terraform usa `~/.aws/credentials` automáticamente. Solo especificamos la regi�
 ```hcl
 resource "aws_instance" "mi_servidor" {
   ami           = "ami-0d6d5a1f326b57cb0"
-  instance_type = "t2.micro"
+  instance_type = "t3.micro"
 }
 ```
 Primer argumento: tipo de recurso. Segundo argumento: nombre local dentro de Terraform.
@@ -51,7 +51,7 @@ Primer argumento: tipo de recurso. Segundo argumento: nombre local dentro de Ter
 variable "instance_type" {
   description = "Tipo de instancia EC2"
   type        = string
-  default     = "t2.micro"
+  default     = "t3.micro"
 }
 ```
 Se usan con `var.instance_type`. Si cambias el valor, el cambio se propaga a todos los recursos que lo referencian.
@@ -120,7 +120,7 @@ provider "aws" {
 ```hcl
 resource "aws_instance" "mi_servidor" {
   ami           = "ami-0d6d5a1f326b57cb0"
-  instance_type = "t2.micro"
+  instance_type = "t3.micro"
 }
 ```
 
@@ -136,11 +136,11 @@ Dentro van las propiedades del recurso. La AMI, el tipo de instancia. Cada tipo 
 variable "instance_type" {
   description = "Tipo de instancia EC2"
   type        = string
-  default     = "t2.micro"
+  default     = "t3.micro"
 }
 ```
 
-"En lugar de escribir `t2.micro` directamente en el resource, lo parametrizamos. El valor por defecto es `t2.micro`, pero se puede sobreescribir con `-var='instance_type=t2.nano'` al ejecutar el plan o apply. Esto hace que la misma configuración funcione para distintos entornos sin duplicar archivos.
+"En lugar de escribir `t3.micro` directamente en el resource, lo parametrizamos. El valor por defecto es `t3.micro`, pero se puede sobreescribir con `-var='instance_type=t2.nano'` al ejecutar el plan o apply. Esto hace que la misma configuración funcione para distintos entornos sin duplicar archivos.
 
 Esos son los cuatro bloques. Con esto pueden leer cualquier configuración de Terraform del proyecto."
 
@@ -180,9 +180,9 @@ variable "ami_id" {
 }
 
 variable "instance_type" {
-  description = "Tipo de instancia — t2.micro es Free Tier"
+  description = "Tipo de instancia — t3.micro es Free Tier"
   type        = string
-  default     = "t2.micro"
+  default     = "t3.micro"
 }
 ```
 
@@ -285,7 +285,7 @@ La primera es el detalle de cada recurso:"
 # aws_instance.ejemplo will be created
 + resource "aws_instance" "ejemplo" {
     + ami           = "ami-0d6d5a1f326b57cb0"
-    + instance_type = "t2.micro"
+    + instance_type = "t3.micro"
     + tags          = { "Name" = "terraform-practica-ep19" }
   }
 ```
@@ -344,7 +344,7 @@ cat terraform.tfstate | head -40
 terraform plan -var="instance_type=t2.nano"
 ```
 
-"Terraform recalcula el plan con el nuevo valor. Útil cuando quieres probar distintas configuraciones sin modificar los archivos. En la práctica, esto se usa para diferenciar entornos — dev con `t2.nano`, staging con `t2.micro`, producción con algo más grande — sin duplicar ningún archivo."
+"Terraform recalcula el plan con el nuevo valor. Útil cuando quieres probar distintas configuraciones sin modificar los archivos. En la práctica, esto se usa para diferenciar entornos — dev con `t2.nano`, staging con `t3.micro`, producción con algo más grande — sin duplicar ningún archivo."
 
 ---
 

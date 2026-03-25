@@ -220,7 +220,7 @@ spec:
 
 "Tres cosas importantes aquí.
 
-**Los `resources.limits`** — críticos en una t2.micro. Sin límites, MySQL podría consumir toda la RAM disponible y dejar sin memoria al pod de la app o a los componentes del sistema. Con `limits.memory: 256Mi`, Kubernetes termina el pod si intenta usar más — es el comportamiento preferible a un colapso total del nodo.
+**Los `resources.limits`** — críticos en una t3.micro. Sin límites, MySQL podría consumir toda la RAM disponible y dejar sin memoria al pod de la app o a los componentes del sistema. Con `limits.memory: 256Mi`, Kubernetes termina el pod si intenta usar más — es el comportamiento preferible a un colapso total del nodo.
 
 **El `secretKeyRef`** — en lugar de poner el usuario y la contraseña directamente en el Deployment, los lee del Secret `db-credentials`. Si alguien lee el Deployment, no ve las credenciales. Solo ve una referencia al Secret.
 

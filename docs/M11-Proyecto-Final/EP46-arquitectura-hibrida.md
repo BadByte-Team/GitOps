@@ -44,7 +44,7 @@ Recorrer todos los componentes del flujo GitOps híbrido que construimos durante
          │ ArgoCD detecta cambio (cada 3 min)
          ▼
 ┌─────────────────────────────────────────────────────────────┐
-│         AWS EC2 t2.micro — Free Tier ($0/mes)               │
+│         AWS EC2 t3.micro — Free Tier ($0/mes)               │
 │                                                              │
 │  ┌──────────────────────────────────────────────────────┐   │
 │  │                  K3s Cluster                          │   │
@@ -77,8 +77,8 @@ Recorrer todos los componentes del flujo GitOps híbrido que construimos durante
 | Repositorio infra | GitHub | Git | $0 |
 | Registro de imágenes | Docker Hub | Docker | $0 |
 | IaC | Local → AWS | Terraform | $0 |
-| Servidor nube | AWS | EC2 t2.micro | $0 (Free Tier) |
-| Cluster Kubernetes | EC2 t2.micro | K3s | $0 |
+| Servidor nube | AWS | EC2 t3.micro | $0 (Free Tier) |
+| Cluster Kubernetes | EC2 t3.micro | K3s | $0 |
 | Operador GitOps | K3s | ArgoCD | $0 |
 | Base de datos | K3s | MySQL Pod | $0 |
 | **Total mensual** | | | **$0** |
@@ -125,7 +125,7 @@ Lo que no cambia: el Jenkinsfile es idéntico. Los plugins, las credenciales, lo
 
 $0 vs $72/mes solo por el control plane.
 
-K3s es Kubernetes certificado por la CNCF. La misma API, los mismos manifiestos YAML, la misma compatibilidad con ArgoCD. La compensación: control plane y nodo de trabajo en la misma instancia t2.micro, sin multi-AZ, sin alta disponibilidad automática. Para aprender GitOps, eso no importa.
+K3s es Kubernetes certificado por la CNCF. La misma API, los mismos manifiestos YAML, la misma compatibilidad con ArgoCD. La compensación: control plane y nodo de trabajo en la misma instancia t3.micro, sin multi-AZ, sin alta disponibilidad automática. Para aprender GitOps, eso no importa.
 
 Lo que no cambia: los manifiestos YAML de Kubernetes que escribiste funcionan en EKS, GKE, o AKS sin cambiar una sola línea. El conocimiento es completamente portátil.
 
@@ -192,7 +192,7 @@ Kubernetes crea un pod nuevo con la imagen actualizada. Espera a que pase el rea
 | Aspecto | Arquitectura de pago | Arquitectura del curso |
 |---|---|---|
 | Jenkins | EC2 t2.medium — $33/mes | PC Local — $0 |
-| Kubernetes | EKS — $72/mes | K3s en t2.micro — $0 |
+| Kubernetes | EKS — $72/mes | K3s en t3.micro — $0 |
 | LoadBalancer | AWS ALB — $20/mes | NodePort — $0 |
 | **Costo total** | **~$125+/mes** | **$0** |
 | Jenkinsfile | Idéntico | Idéntico |

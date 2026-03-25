@@ -282,7 +282,7 @@ La segunda: el `destroy` no elimina el bucket S3 del backend. Eso es intencional
 
 Ahora el ciclo es predecible. Saben qué hace cada comando, cuándo ejecutarlo, y qué significa cada línea del output. El `+`, el `-`, el `~`, el `-/+` — ya no son signos misteriosos, son información concreta sobre qué va a ocurrir en AWS.
 
-En el siguiente episodio ejecutamos ese ciclo sobre la configuración real: la EC2 t2.micro con el Security Group de tres puertos, el disco de 30 GB, el servidor de producción del curso a costo cero. El episodio de payoff del módulo.
+En el siguiente episodio ejecutamos ese ciclo sobre la configuración real: la EC2 t3.micro con el Security Group de tres puertos, el disco de 30 GB, el servidor de producción del curso a costo cero. El episodio de payoff del módulo.
 
 Nos vemos en el EP22."
 
