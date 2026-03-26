@@ -28,7 +28,7 @@ Empecemos."
 > *Pantalla: diagrama simple o slide con los cuatro componentes.*
 
 "Antes de ejecutar cualquier comando, necesitas entender los cuatro ingredientes que componen una instancia EC2. Sin esto, los comandos de la CLI son solo magia negra.
-
+![[EC2.png]]
 ---
 
 **AMI — Amazon Machine Image**
@@ -207,10 +207,10 @@ echo "Esperando que la instancia esté lista..."
 aws ec2 wait instance-running --instance-ids $INSTANCE_ID
 echo "✅ Lista"
 
-PUBLIC_IP=$(aws ec2 describe-instances \
-  --instance-ids $INSTANCE_ID \
-  --query 'Reservations[0].Instances[0].PublicIpAddress' \
-  --output text)
+	PUBLIC_IP=$(aws ec2 describe-instances \
+	  --instance-ids $INSTANCE_ID \
+	  --query 'Reservations[0].Instances[0].PublicIpAddress' \
+	  --output text)
 
 echo "IP Pública: $PUBLIC_IP"
 ```

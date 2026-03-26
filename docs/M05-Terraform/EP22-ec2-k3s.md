@@ -8,11 +8,13 @@
 ---
 
 ## 🎯 Objetivo
+
 Usar Terraform para crear la EC2 t3.micro definitiva del curso — el servidor que correrá K3s, ArgoCD y la app Go — con su Security Group configurado y disco de 30 GB. Conectar por SSH y verificar los recursos del sistema.
 
 ---
 
 ## 📋 Prerequisitos
+
 - Backend S3 y DynamoDB configurados (EP17, EP20)
 - `terraform init` ejecutado en `jenkins-ec2/` (EP20)
 - AWS CLI configurado (EP15)
@@ -67,6 +69,16 @@ El **30080** es el puerto de ArgoCD. Cuando en el EP39 expongamos ArgoCD usando 
 El **30081** es el puerto de nuestra app Go. Cuando el EP40 complete el despliegue, van a escribir `http://IP_EC2:30081` y ver la plataforma del curso corriendo en producción.
 
 Lo importante de esto es que estos tres puertos están configurados desde el día uno. No tenemos que volver a Terraform en el EP39 ni en el EP40 a agregar reglas. La infraestructura ya está lista para recibir lo que viene.
+
+---
+
+> ⚠️ **ADVERTENCIA DE SEGURIDAD — Security Group abierto a todo internet**
+>
+> En esta configuración, los tres puertos (22, 30080, 30081) están abiertos a `0.0.0.0/0` — cualquier IP del mundo puede intentar conectarse. **Lo hacemos así por simplicidad**, pero en producción:
+>
+> - **SSH (22)** debe restringirse a tu IP pública: `cidr_blocks = ["TU_IP/32"]`. Puedes obtener tu IP con `curl -s ifconfig.me` y pasarla como variable a Terraform: `-var="my_ip=$(curl -s ifconfig.me)"`.
+> - **ArgoCD (30080)** está expuesto sin TLS — las credenciales viajan en texto plano por internet. Una alternativa segura es acceder vía SSH tunnel: `ssh -i aws-key.pem -L 8443:localhost:30080 ubuntu@<IP>` y abrir `http://localhost:8443` en el navegador, eliminando la necesidad de exponer el puerto.
+> - **La app (30081)** es el único puerto que podría quedarse abierto legítimamente, ya que es la app de producción que los usuarios necesitan acceder.
 
 El segundo recurso es la **instancia EC2**. Ubuntu 22.04 LTS, tipo `t3.micro`, disco de 30 GB en formato gp3 encriptado. ¿Por qué 30 GB y no los 8 GB del default? Porque K3s descarga imágenes Docker al pull los contenedores — cada imagen puede ser varios cientos de megabytes — y con 8 GB nos quedaríamos sin espacio."
 
@@ -329,6 +341,7 @@ Nos vemos en el EP23."
 ---
 
 ## ✅ Checklist de Verificación
+
 - [ ] `terraform apply` completa con `2 added, 0 changed, 0 destroyed`
 - [ ] La instancia aparece como `running` con nombre `Produccion-K3s`
 - [ ] Security Group con puertos 22, 30080 y 30081 abiertos
@@ -353,6 +366,7 @@ Nos vemos en el EP23."
 ---
 
 ## 🗒️ Notas de Producción
+
 - La apertura con las dos ventanas — calculadora de AWS vs el `variables.tf` con `t3.micro` — es el contraste visual más poderoso del módulo. Prepararlo de antemano para que no haya demoras en el momento de la grabación.
 - Al leer el `terraform plan` en voz alta, señalar con el cursor en la terminal cada sección mientras la describes — refuerza la conexión entre la voz y el texto en pantalla.
 - El `free -h` dentro de la instancia mostrando `Swap: 0B` es el momento exacto para anticipar el EP28 — decirlo en voz alta crea la expectativa sin desviar el foco.

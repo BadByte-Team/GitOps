@@ -8,11 +8,13 @@
 ---
 
 ## 🎯 Objetivo
+
 Cambiar el Service de ArgoCD de `ClusterIP` a `NodePort` en el puerto 30080, obtener y cambiar la contraseña inicial, y acceder al dashboard de ArgoCD desde el navegador.
 
 ---
 
 ## 📋 Prerequisitos
+
 - ArgoCD instalado y todos los pods en `Running` (EP38)
 - Puerto 30080 abierto en el Security Group de la EC2 (configurado en el EP22 con Terraform)
 
@@ -59,6 +61,7 @@ kubectl patch svc argocd-server -n argocd \
 ```
 
 "Desglose del comando:
+
 - `patch svc argocd-server -n argocd` — modifica el Service llamado `argocd-server` en el namespace `argocd`
 - `-p '...'` — el parche en formato JSON. Cambia el tipo a `NodePort` y mapea el puerto 443 del service al puerto 8080 del contenedor, exponiéndolo externamente en el puerto 30080
 
@@ -92,6 +95,7 @@ echo
 ```
 
 "El pipeline de comandos hace tres cosas:
+
 1. `get secret argocd-initial-admin-secret` — obtiene el Secret que contiene la contraseña
 2. `-o jsonpath="{.data.password}"` — extrae solo el campo `password` del JSON
 3. `| base64 -d` — decodifica de Base64 (Kubernetes guarda los secrets en Base64)
@@ -145,6 +149,17 @@ kubectl delete secret argocd-initial-admin-secret -n argocd
 
 "Esto es una buena práctica de seguridad: el Secret inicial debería existir solo hasta que se cambie la contraseña."
 
+> ⚠️ **ADVERTENCIA DE SEGURIDAD — ArgoCD expuesto sin cifrado**
+>
+> El dashboard de ArgoCD está accesible en `http://<IP>:30080` — sin TLS/HTTPS. Esto significa que el usuario, la contraseña, y toda la comunicación con ArgoCD **viajan en texto plano por internet**. Un atacante en la red puede capturar las credenciales con un simple sniff de tráfico.
+>
+> **En producción, ArgoCD SIEMPRE debe usarse con HTTPS.** Alternativas:
+>
+> - **SSH Tunnel (sin costo):** Acceder vía `ssh -i aws-key.pem -L 8443:localhost:30080 ubuntu@<IP>` y abrir `http://localhost:8443`. Esto cifra todo el tráfico y elimina la necesidad de exponer el puerto 30080 a internet.
+> - **Ingress con TLS:** Usar el Traefik incluido en K3s con cert-manager y Let's Encrypt para obtener un certificado SSL válido (requiere un dominio).
+>
+> Para el curso usamos HTTP directo por simplicidad, pero es importante entender que esta práctica es inaceptable en cualquier entorno con datos reales.
+
 ---
 
 ### PASO 5 — Explorar el dashboard (8:30 – 9:30)
@@ -176,6 +191,7 @@ Nos vemos en el EP40."
 ---
 
 ## ✅ Checklist de Verificación
+
 - [ ] `kubectl get svc argocd-server -n argocd` muestra tipo `NodePort`
 - [ ] El puerto externo es `30080` en la columna `PORT(S)`
 - [ ] La interfaz web carga en `http://<IP_EC2>:30080`
@@ -197,6 +213,7 @@ Nos vemos en el EP40."
 ---
 
 ## 🗒️ Notas de Producción
+
 - La intro mostrando el Service en ClusterIP y explicando el costo del LoadBalancer es el gancho narrativo del episodio — la solución NodePort contrasta perfectamente.
 - El `kubectl patch` es un comando que mucha gente no conoce — explicar su función general brevemente antes de mostrar el comando específico.
 - Al mostrar la advertencia de certificado SSL en el navegador, explicar que es normal y seguro para el entorno del curso — muchos alumnos se asustan y detienen aquí.

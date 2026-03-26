@@ -140,7 +140,7 @@ El proyecto aparece vacío — sin análisis todavía. El primer análisis llega
 
 "Ahora el token que Jenkins va a usar para autenticarse con SonarQube.
 
-En SonarQube: click en tu usuario en la esquina superior derecha → **My Account** → pestaña **Security** → sección **Generate Tokens**.
+	En SonarQube: click en tu usuario en la esquina superior derecha → **My Account** → pestaña **Security** → sección **Generate Tokens**.
 
 Completo:
 - **Name:** `jenkins-token` — descripción para recordar para qué es

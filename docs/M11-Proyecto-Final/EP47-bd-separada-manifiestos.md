@@ -8,11 +8,13 @@
 ---
 
 ## 🎯 Objetivo
+
 Entender por qué la base de datos debe ser un recurso independiente en Kubernetes, y revisar en detalle cada uno de los siete manifiestos del directorio `gitops-infra/infrastructure/kubernetes/app/` — desde el Namespace hasta el NodePort de la app.
 
 ---
 
 ## 📋 Prerequisitos
+
 - K3s con ArgoCD configurado y sincronizando `gitops-infra` (EP40)
 - Los siete archivos YAML presentes en `gitops-infra/infrastructure/kubernetes/app/`
 
@@ -139,6 +141,20 @@ echo -n "C4rs0_S3cur3_P@ss!" | base64
 
 ---
 
+> ⚠️ **ADVERTENCIA DE SEGURIDAD — Base64 NO es cifrado**
+>
+> Los valores en `secrets.yaml` están codificados en Base64, no cifrados. Cualquier persona con acceso al repositorio `gitops-infra` puede decodificarlos con `echo "Y3Vyc29fYXBw" | base64 -d` y obtener las credenciales en texto plano.
+>
+> **En producción, nunca se commitean Secrets en Base64 a Git.** Alternativas reales:
+>
+> - **Sealed Secrets (Bitnami):** Cifra los Secrets con una llave pública. Solo el cluster puede descifrarlos. El archivo cifrado sí se puede commitear a Git de forma segura.
+> - **External Secrets Operator:** Los Secrets viven en un gestor externo (AWS Secrets Manager, HashiCorp Vault) y Kubernetes los lee dinámicamente.
+> - **SOPS (Mozilla):** Cifra los valores del YAML con llaves GPG o KMS antes de commitear.
+>
+> Para el curso usamos Base64 directo por simplicidad, pero es importante entender que esta práctica es inaceptable en cualquier entorno de producción.
+
+---
+
 #### Archivo 3 — `mysql-configmap.yaml` (7:00 – 8:30)
 
 ```yaml
@@ -225,6 +241,20 @@ spec:
 **El `secretKeyRef`** — en lugar de poner el usuario y la contraseña directamente en el Deployment, los lee del Secret `db-credentials`. Si alguien lee el Deployment, no ve las credenciales. Solo ve una referencia al Secret.
 
 **El volumen del ConfigMap** — monta el `init.sql` del ConfigMap en `/docker-entrypoint-initdb.d/`. MySQL ejecutará ese script al arrancar la primera vez, creando las tablas que necesita la app."
+
+> ⚠️ **ADVERTENCIA DE SEGURIDAD — Contraseña de root hardcodeada**
+>
+> A diferencia de `MYSQL_USER` y `MYSQL_PASSWORD` (que usan `secretKeyRef`), la contraseña de root está en texto plano directamente en el Deployment: `value: "r00t_S3cur3_P@ss!"`. Cualquier persona que lea este archivo tiene acceso root al MySQL.
+>
+> En producción, `MYSQL_ROOT_PASSWORD` también debe venir de un Secret:
+>
+> ```yaml
+> - name: MYSQL_ROOT_PASSWORD
+>   valueFrom:
+>     secretKeyRef:
+>       name: db-credentials
+>       key: root-password
+> ```
 
 ---
 
@@ -362,6 +392,7 @@ Nos vemos en el EP48."
 ---
 
 ## ✅ Checklist de Verificación
+
 - [ ] Entiendes por qué MySQL no puede estar en el mismo Dockerfile que la app Go
 - [ ] Sabes por qué se usa `secretKeyRef` en lugar de poner credenciales directamente
 - [ ] Entiendes la diferencia entre `ClusterIP` (mysql-svc) y `NodePort` (curso-gitops-svc)
@@ -382,6 +413,7 @@ Nos vemos en el EP48."
 ---
 
 ## 🗒️ Notas de Producción
+
 - Abrir con el `docker-compose.yml` y conectarlo explícitamente con lo que vienen los manifiestos — el alumno conoce Compose desde el EP12.
 - La pausa conceptual de "por qué no juntar MySQL y la app" es el núcleo pedagógico del episodio — tomarse el tiempo necesario para cada uno de los cuatro puntos.
 - Al mostrar el `secretKeyRef`, hacer zoom en las líneas relevantes y comparar visualmente con poner el valor directo — el contraste muestra la ventaja de seguridad.

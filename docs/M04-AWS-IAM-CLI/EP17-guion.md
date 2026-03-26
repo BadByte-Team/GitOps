@@ -80,13 +80,14 @@ Son los dos recursos del curso que no tienen costo ni siquiera rozando el Free T
 ```bash
 aws s3api create-bucket \
   --bucket curso-gitops-terraform-state \
-  --region us-east-2
+  --region us-east-2 \
+  --create-bucket-configuration LocationConstraint=us-east-2
 
 aws s3 ls | grep curso-gitops
 # 2026-XX-XX curso-gitops-terraform-state
 ```
 
-"---
+---
 
 **Activar el versionado:**
 
@@ -102,7 +103,7 @@ aws s3api get-bucket-versioning \
 # "Status": "Enabled"
 ```
 
-"---
+---
 
 **Activar encriptación en reposo:**
 
@@ -259,6 +260,12 @@ aws dynamodb describe-table \
 ```
 
 "Los cuatro deben responder sin error. Si todos están bien, el backend está listo."
+
+"Por ultimo, limpiamos el entorno nuevamente"
+```bash
+aws s3 rb s3://curso-gitops-terraform-state --force
+aws dynamodb delete-table --table-name curso-gitops-terraform-locks
+```
 
 ---
 

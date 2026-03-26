@@ -141,7 +141,7 @@ Aplica el estilo de indentación y espaciado estándar de HCL a todos los archiv
 
 ```bash
 terraform fmt -check    # ver qué necesita formateo, sin modificar nada
-terraform fmt           # aplicar el formateo
+	terraform fmt           # aplicar el formateo
 ```
 
 "**¿Cuándo usarlo?** Antes de hacer commit a `gitops-infra`. Mantiene el código consistente sin importar quién lo escribió. En un equipo donde varias personas tocan los mismos archivos de Terraform, el `fmt` evita que los commits tengan cambios de formato mezclados con cambios de lógica."

@@ -8,11 +8,13 @@
 ---
 
 ## 🎯 Objetivo
+
 Instalar Trivy en tu PC local, montarlo dentro del contenedor de Jenkins actualizando el `docker-compose.yml`, y verificar que el stage de escaneo del pipeline puede ejecutarse correctamente.
 
 ---
 
 ## 📋 Prerequisitos
+
 - Jenkins local corriendo con Docker Compose (EP31)
 - Docker instalado localmente (EP08)
 
@@ -69,6 +71,7 @@ Un **CVE** — Common Vulnerabilities and Exposures — es un identificador úni
 Los niveles de severidad que maneja Trivy son cinco: UNKNOWN, LOW, MEDIUM, HIGH y CRITICAL. En el pipeline del curso escaneamos con `--severity HIGH,CRITICAL` — nos interesan las vulnerabilidades que podrían ser explotables con impacto real.
 
 La columna **Status** es la que más importa para decidir qué hacer:
+
 - `fixed` — existe una versión del paquete que corrige la vulnerabilidad. Actualizar el paquete en el Dockerfile la resuelve.
 - `affected` — la vulnerabilidad existe pero todavía no hay parche disponible. Evaluar el riesgo.
 - `will_not_fix` — los mantenedores decidieron no parchearla. Evaluar si es crítico para el contexto.
@@ -248,6 +251,12 @@ stage('Docker Push') {
 
 Para el curso usamos `--exit-code 0` — así el pipeline no se rompe si nuestra imagen tiene algún CVE menor."
 
+> ⚠️ **ADVERTENCIA DE SEGURIDAD — `--exit-code 0` no protege la producción**
+>
+> Con `--exit-code 0`, una imagen con vulnerabilidades CRITICAL pasa a Docker Hub y ArgoCD la despliega en producción sin obstáculo. El reporte aparece en los logs de Jenkins, pero nadie lo revisa automáticamente.
+>
+> En producción, el estándar es `--exit-code 1`: el pipeline falla si Trivy encuentra vulnerabilidades con la severidad configurada. Esto garantiza que ninguna imagen vulnerable llega al registro de imágenes ni al cluster.
+
 ---
 
 ### CIERRE (11:00 – 12:00)
@@ -263,6 +272,7 @@ Nos vemos en el EP43."
 ---
 
 ## ✅ Checklist de Verificación
+
 - [ ] `trivy --version` funciona en la PC local
 - [ ] `docker exec jenkins trivy --version` funciona dentro del contenedor
 - [ ] El volumen `/usr/bin/trivy:/usr/bin/trivy` está en el `docker-compose.yml`
@@ -284,6 +294,7 @@ Nos vemos en el EP43."
 ---
 
 ## 🗒️ Notas de Producción
+
 - La pausa conceptual de CVEs y severidades es breve pero necesaria — el alumno va a ver esos términos en el reporte y necesita entenderlos.
 - El escaneo de `nginx:latest` es un buen ejemplo porque siempre tiene alguna vulnerabilidad — muestra el reporte real con datos concretos.
 - El escaneo de `curso-gitops:latest` puede mostrar cero vulnerabilidades — si es así, explicar que es una señal positiva del multi-stage build, no un error.

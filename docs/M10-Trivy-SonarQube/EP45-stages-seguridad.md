@@ -7,11 +7,13 @@
 ---
 
 ## 🎯 Objetivo
+
 Revisar el Jenkinsfile completo con todos los stages de seguridad integrados — SonarQube Analysis, Quality Gate y Trivy Scan — y ejecutar el pipeline completo observando cómo cada stage cumple su función en el flujo de CI/CD.
 
 ---
 
 ## 📋 Prerequisitos
+
 - Trivy instalado y montado en Jenkins (EP42)
 - SonarQube con el proyecto `curso-gitops` y el token generado (EP43)
 - Integración Jenkins ↔ SonarQube configurada (EP44)
@@ -77,6 +79,26 @@ La regla general en seguridad es **fail fast and early** — fallar rápido y te
 **Deploy to GitOps va al final** — solo actualizamos `gitops-infra` si toda la cadena de validación pasó. ArgoCD solo despliega código que fue aprobado por el pipeline completo.
 
 Ese orden es el que protege la cadena de suministro de software. Cada stage es una puerta que el código debe pasar antes de avanzar."
+
+> ⚠️ **ADVERTENCIA DE SEGURIDAD — El pipeline actual no bloquea en la práctica**
+>
+> El principio de "fail fast" descrito arriba es correcto, pero la implementación actual del Jenkinsfile tiene dos limitaciones importantes:
+>
+> 1. **Trivy usa `--exit-code 0`** — esto significa que el stage siempre termina exitosamente, incluso si encuentra CVEs CRITICAL. El reporte aparece en los logs, pero el pipeline continúa y la imagen llega a Docker Hub y a producción. Para enforcement real, cambiar a `--exit-code 1`.
+>
+> 2. **No hay `waitForQualityGate`** — el stage de SonarQube envía el análisis pero nunca espera ni evalúa el resultado del Quality Gate. Si SonarQube reporta "Failed", el pipeline sigue adelante sin enterarse. Para enforcement real, agregar un stage:
+>
+>    ```groovy
+>    stage('Quality Gate') {
+>        steps {
+>            timeout(time: 5, unit: 'MINUTES') {
+>                waitForQualityGate abortPipeline: true
+>            }
+>        }
+>    }
+>    ```
+>
+> Para el curso usamos el modo report-only para evitar que los alumnos se bloqueen. En producción, ambos deben tener enforcement activo.
 
 ---
 
@@ -320,6 +342,7 @@ El histórico de análisis muestra este análisis y el del EP44. Con cada build,
 "Eso es el EP45. Y con esto cerramos el Módulo 10.
 
 El pipeline de CI es ahora un pipeline de seguridad integrada. Cada commit que llega a producción pasó por:
+
 - Análisis de calidad de código con SonarQube
 - Evaluación del Quality Gate
 - Escaneo de vulnerabilidades de la imagen con Trivy
@@ -334,6 +357,7 @@ Nos vemos en el EP46."
 ---
 
 ## ✅ Checklist de Verificación
+
 - [ ] El pipeline ejecuta los 6 stages en verde
 - [ ] El Console Output muestra `ANALYSIS SUCCESSFUL` en el stage de SonarQube
 - [ ] El reporte de Trivy aparece en el Console Output con el conteo de vulnerabilidades
@@ -356,6 +380,7 @@ Nos vemos en el EP46."
 ---
 
 ## 🗒️ Notas de Producción
+
 - La pausa conceptual del orden de stages es el aporte pedagógico más valioso del episodio — "fail fast and early" es un principio que los alumnos van a usar en sus carreras.
 - Mientras el stage de SonarQube corre, mantener ambas pantallas visibles — Jenkins en una ventana y SonarQube actualizándose en otra — muestra la integración en tiempo real.
 - Si el reporte de Trivy muestra cero vulnerabilidades, celebrarlo explícitamente — "esto es el resultado del multi-stage build que aprendimos en el EP10".

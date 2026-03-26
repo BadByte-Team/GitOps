@@ -8,11 +8,13 @@
 ---
 
 ## 🎯 Objetivo
+
 Levantar Jenkins y SonarQube en tu máquina local usando Docker Compose, obtener la contraseña inicial de Jenkins, completar la configuración inicial, y verificar que Jenkins puede construir imágenes Docker.
 
 ---
 
 ## 📋 Prerequisitos
+
 - Docker instalado y corriendo en local (EP08)
 - `docker compose version` responde sin errores
 
@@ -174,6 +176,20 @@ El tercero — `/usr/bin/docker:/usr/bin/docker` — monta el binario de Docker 
 
 ---
 
+> ⚠️ **ADVERTENCIA DE SEGURIDAD — Jenkins como root con Docker socket**
+>
+> En esta configuración, Jenkins corre como `user: root` con acceso directo al Docker socket del host (`/var/run/docker.sock`). **Esto es equivalente a darle acceso root a tu máquina completa.** Un plugin malicioso o un pipeline comprometido podría montar el filesystem del host, leer `~/.aws/credentials`, o crear contenedores privilegiados.
+>
+> **Lo usamos así por simplicidad en el curso**, pero en producción se debe usar una de estas alternativas:
+>
+> - **Docker-in-Docker (DinD):** Jenkins se conecta a un daemon Docker aislado en un contenedor separado vía TCP, sin acceso al socket del host.
+> - **Kaniko:** Construye imágenes Docker sin necesidad de un daemon Docker — solo necesita acceso al registro de imágenes.
+> - **Jenkins con agentes efímeros:** Se crean contenedores temporales para cada build que se destruyen al terminar.
+>
+> Además, el `chmod 666 /var/run/docker.sock` permite que **cualquier proceso** del sistema use Docker. En producción, usa un grupo `docker` con permisos restringidos.
+
+---
+
 ### PASO 3 — Ajuste para SonarQube (8:00 – 9:00)
 
 > *Pantalla: terminal.*
@@ -234,6 +250,7 @@ docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
 La pantalla de bienvenida pregunta cómo instalar los plugins. Click en **'Install suggested plugins'**. Jenkins instalará automáticamente los plugins más comunes — Git, Pipeline, Credentials, etc. Tarda entre 2 y 4 minutos.
 
 Cuando termina, me pide crear el usuario administrador. Lo lleno:
+
 - **Username:** `admin`
 - **Password:** una contraseña segura que recuerde
 - **Full name:** mi nombre
@@ -284,6 +301,7 @@ Nos vemos en el EP32."
 ---
 
 ## ✅ Checklist de Verificación
+
 - [ ] `docker compose ps` muestra 3 contenedores en estado `Up`
 - [ ] Jenkins responde en `http://localhost:8080`
 - [ ] Usuario `admin` creado en Jenkins
@@ -306,6 +324,7 @@ Nos vemos en el EP32."
 ---
 
 ## 🗒️ Notas de Producción
+
 - La apertura con la tabla de costos y el $0 es el hook del episodio — enfatizar que Jenkins local elimina completamente el costo de una segunda EC2.
 - Al explicar los volúmenes del compose, señalar con el cursor cada línea mientras se explica — el alumno necesita conectar la sintaxis con el comportamiento.
 - Hacer el `docker compose up -d` con la terminal visible y esperar a que terminen las descargas — mostrar que la primera vez tarda y las siguientes son rápidas.
