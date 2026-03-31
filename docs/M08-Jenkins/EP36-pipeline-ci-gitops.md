@@ -286,11 +286,14 @@ withSonarQubeEnv('sonarqube-server')
 ```
 va a funcionar sin problemas."
 
+"Por último, configuramos el webhook para jenkins en sonarqube"
+En sonarqube, nos dirigimos dijimos a: **Administration** → **Configuration** → **Webhooks**
+
+Hacemos click en create y ponemos:
+	- Nombre: **Jenkins-Webhook**
+	- URL: **http://<IP_SERVIDOR/CONTENEDOR_JENKINS>:8080/sonarqube-webhook/**
+
 ---
-
-Si quieres, el paso 7 lo dejamos como validación del pipeline + cómo detectar rápido cuando SonarQube está mal conectado (ahí hay varios errores típicos interesantes).
-
-
 ### PASO 3 — Crear el pipeline en Jenkins (6:00 – 8:00)
 
 > *Pantalla: navegador en Jenkins.*
