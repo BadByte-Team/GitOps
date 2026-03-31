@@ -47,7 +47,7 @@ En K3s (nuestro caso), el control plane y el nodo de trabajo viven en la misma m
 
 ---
 
-## 🎬 Guión del Video
+	## 🎬 Guión del Video
 
 ### INTRO (0:00 – 1:00)
 

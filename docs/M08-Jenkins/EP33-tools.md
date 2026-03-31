@@ -121,6 +121,12 @@ environment {
 }
 ```
 
+Para agregar las instalaciones.
+En Jenkins: **Manage Jenkins** → **Tools** 
+	- **JDK:** **Instalaciones JDK** → **Añadir JDK** → Nombre: **jdk17** → Marcar **Instalar automáticamente** 
+	- **NodeJS:** **Instalaciones NodeJS** → **Añadir NodeJS** → Nombre: **node18** o cambiar según la versión → Marcar **Instalar automáticamente** y seleccionar la versión requerida. (DEBE COINCIDIR CON LA VERSIÓN QUE ESTÁ EN EL Jenkinsfile)
+	- **SonarQube:** **Instalaciones de SonarQube Scanner** → **Añadir SonarQube Scanner** → Nombre: **sonar-scanner** → Marcar **Instalar automáticamente** y seleccionar la última version
+
 "Jenkins Tools tiene:
 - JDK: `jdk17` ✅
 - NodeJS: `node18` ✅

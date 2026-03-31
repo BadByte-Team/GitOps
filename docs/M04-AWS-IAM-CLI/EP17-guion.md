@@ -55,6 +55,8 @@ S3 Bucket ←── Terraform guarda el nuevo estado
 DynamoDB  ←── Terraform libera el lock
 ```
 
+
+
 Si alguien más intenta hacer `terraform apply` mientras el lock está activo, Terraform le dice 'espera, hay otro proceso en curso'. Sin DynamoDB, dos personas podrían sobrescribir el estado al mismo tiempo.
 
 ---

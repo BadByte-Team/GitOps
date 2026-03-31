@@ -231,8 +231,11 @@ exit
 
 "En el contexto de nuestro proyecto, los casos de uso más comunes del `exec` son:
 
-Verificar que las variables de entorno de la base de datos llegaron correctamente al contenedor de la app:"
+Verificar que las variables de entorno de la base de datos llegaron correctamente al contenedor de la app:" 
 
+> [!WARNING]
+> **SOLO MOSTRAR LOS COMANDOS, NO EJECUTARLOS**
+ 
 ```bash
 kubectl exec -it POD_APP -n curso-gitops -- sh
 env | grep DB_

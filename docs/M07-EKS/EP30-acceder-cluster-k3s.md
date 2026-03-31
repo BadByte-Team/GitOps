@@ -210,6 +210,25 @@ CURRENT   NAME      CLUSTER   AUTHINFO   NAMESPACE
 kubectl config use-context default
 ```
 
+"Agregamos la IP del servidor adicionales al certificado"
+
+```shell
+nano /etc/rancher/k3s/config.yaml
+```
+
+"En el `config.yaml`"
+
+```yml
+tls-san:
+ - IP_PUBLICA_EC2
+```
+
+"Reiniciamos del servicio"
+
+```bash
+sudo systemctl restart k3s 
+```
+
 "Ahora la prueba que importa:"
 
 ```bash

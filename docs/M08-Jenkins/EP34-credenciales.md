@@ -1,4 +1,4 @@
-# EP 34: Configuración de Credenciales — Docker Hub y GitHub Token
+ EP 34: Configuración de Credenciales — Docker Hub y GitHub Token
 
 **Tipo:** CONFIGURACIÓN
 **Duración estimada:** 10–12 min
@@ -113,11 +113,59 @@ El token aparece una sola vez — empieza con `ghp_`. Lo copio inmediatamente. S
 
 "De vuelta en Jenkins, **Add Credentials** de nuevo.
 
-- **Kind:** `Secret text` — porque el token de GitHub es una cadena de texto, no usuario + contraseña
+- **Kind:** `Usermame with Password` — porque el token de GitHub es una cadena de texto, no usuario + contraseña
 - **Scope:** Global
-- **Secret:** pego el token que acabo de copiar — `ghp_...`
+- **Username:**  Tu usuario de GitHub con acceso a los repositorios privados.
+- **Password:** pego el token que acabo de copiar — `ghp_...`
 - **ID:** `github-token-id` — exactamente así. El Jenkinsfile lo referencia como `credentialsId: 'github-token-id'` en el stage de Deploy to GitOps Repo
 - **Description:** `GitHub Personal Access Token`
+
+Click en **'Create'**.
+
+---
+### PASO 5 — Configuración inicial de SonarQube (contenedor)
+
+> _Pantalla: navegador accediendo a SonarQube._
+
+"Antes de generar el token, verifico que SonarQube esté listo.
+
+Accedo desde el navegador a: **http://<IP_DEL_SERVIDOR>:9000**
+
+Inicio sesión con:
+
+- **Username:** `admin`
+- **Password:** `admin`
+
+El sistema solicita cambiar la contraseña.
+
+Después verifico:
+- **Administration** → **System** → **Status** → Estado en **UP**
+    
+Con esto, SonarQube queda listo para usarse con Jenkins."
+
+---
+
+### PASO 6 — Generar el Access Token en SonarQube
+
+> _Pantalla: SonarQube → perfil._
+
+"Ahora genero el token.
+Voy a: **My Account** → **Security**
+
+Configuro:
+- **Name:** `jenkins-sonarqube-token`
+    
+Click en **Generate**
+
+Se muestra el token (ejemplo: `sqp_XXXX...`) — lo copio inmediatamente porque solo aparece una vez.
+
+"De vuelta en Jenkins, **Add Credentials** de nuevo.
+
+- **Kind:** `Secret text` — porque el token de SonarQube es una cadena de texto, no usuario + contraseña
+- **Scope:** Global
+- **Secret:** pego el token que acabo de copiar — `ghp_...`
+- **ID:** `sonarqube-server` — exactamente así.
+- **Description:** `SonarQube Server Access Token`
 
 Click en **'Create'**.
 
@@ -125,7 +173,7 @@ Aparece en la lista como Secret text — el valor cifrado no es visible."
 
 ---
 
-### PASO 5 — Verificar las credenciales (9:00 – 10:00)
+### PASO 7 — Verificar las credenciales (9:00 – 10:00)
 
 > *Pantalla: navegador mostrando la lista de credenciales.*
 
@@ -134,7 +182,8 @@ Aparece en la lista como Secret text — el valor cifrado no es visible."
 ```
 ID               Tipo                    Descripción
 dockerhub-id     Username with password  Docker Hub credentials
-github-token-id  Secret text             GitHub Personal Access Token
+github-token-id  Username with password  GitHub Personal Access Token
+sonarqube-server Secret text             SonarQube Credential (Token)
 ```
 
 Verifico que los IDs coinciden exactamente con lo que usa el Jenkinsfile:"

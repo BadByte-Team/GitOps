@@ -46,6 +46,10 @@ Jenkins es el puente. Construye la imagen en local, la publica en Docker Hub, y 
 
 ## El Jenkinsfile completo
 
+>[!WARNING]
+>Cambiar "TU_USUARIO_DOCKERHUB"  y "TU_USUARIO_GITHUB" por los valores correspondientes
+
+
 ```groovy
 pipeline {
     agent any
@@ -59,6 +63,8 @@ pipeline {
         DOCKER_HUB_CREDS = credentials('dockerhub-id')
         DOCKER_IMAGE     = "TU_USUARIO_DOCKERHUB/curso-gitops"
         SCANNER_HOME     = tool('sonar-scanner')
+        GITHUB_USER      = "TU_USUARIO_GITHUB"
+        INFRA_REPO       = "gitops-infra"
     }
 
     stages {
@@ -72,6 +78,7 @@ pipeline {
                         returnStdout: true
                     ).trim()
                     env.BUILD_TAG = "${env.BUILD_NUMBER}-${env.GIT_COMMIT_SHORT}"
+                    echo "BUILD_TAG: ${env.BUILD_TAG}"
                 }
             }
         }
@@ -80,12 +87,20 @@ pipeline {
             steps {
                 withSonarQubeEnv('sonarqube-server') {
                     sh """
-                        ${SCANNER_HOME}/bin/sonar-scanner \\
-                        -Dsonar.projectKey=curso-gitops \\
-                        -Dsonar.projectName=curso-gitops \\
-                        -Dsonar.sources=. \\
+                        ${SCANNER_HOME}/bin/sonar-scanner \
+                        -Dsonar.projectKey=curso-gitops \
+                        -Dsonar.projectName=curso-gitops \
+                        -Dsonar.sources=. \
                         -Dsonar.exclusions=**/vendor/**,**/node_modules/**,**/frontend/**
                     """
+                }
+            }
+        }
+
+        stage('Quality Gate') {
+            steps {
+                timeout(time: 5, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
                 }
             }
         }
@@ -94,6 +109,19 @@ pipeline {
             steps {
                 sh "docker build -t ${DOCKER_IMAGE}:${BUILD_TAG} ."
                 sh "docker tag ${DOCKER_IMAGE}:${BUILD_TAG} ${DOCKER_IMAGE}:latest"
+                echo "Imagen construida: ${DOCKER_IMAGE}:${BUILD_TAG}"
+            }
+        }
+
+        stage('Trivy Scan') {
+            steps {
+                sh """
+                    trivy image \
+                      --exit-code 0 \
+                      --severity HIGH,CRITICAL \
+                      --format table \
+                      ${DOCKER_IMAGE}:${BUILD_TAG}
+                """
             }
         }
 
@@ -102,6 +130,7 @@ pipeline {
                 sh "echo ${DOCKER_HUB_CREDS_PSW} | docker login -u ${DOCKER_HUB_CREDS_USR} --password-stdin"
                 sh "docker push ${DOCKER_IMAGE}:${BUILD_TAG}"
                 sh "docker push ${DOCKER_IMAGE}:latest"
+                echo "Imagen subida a Docker Hub: ${DOCKER_IMAGE}:${BUILD_TAG}"
             }
         }
 
@@ -110,13 +139,15 @@ pipeline {
                 withCredentials([string(credentialsId: 'github-token-id', variable: 'GITHUB_TOKEN')]) {
                     sh """
                         rm -rf infra-repo
-                        git clone https://${GITHUB_TOKEN}@github.com/TU_USUARIO_GITHUB/gitops-infra.git infra-repo
+
+                        git clone https://${GITHUB_TOKEN}@github.com/${GITHUB_USER}/${INFRA_REPO}.git infra-repo
 
                         cd infra-repo
                         git config user.email "jenkins@local.com"
                         git config user.name "Jenkins CI"
 
-                        sed -i "s|image: ${DOCKER_IMAGE}:.*|image: ${DOCKER_IMAGE}:${BUILD_TAG}|" \\
+                        # Actualizar el tag de la imagen en deployment.yaml
+                        sed -i "s|image: ${DOCKER_IMAGE}:.*|image: ${DOCKER_IMAGE}:${BUILD_TAG}|" \
                             infrastructure/kubernetes/app/deployment.yaml
 
                         git add infrastructure/kubernetes/app/deployment.yaml
@@ -131,6 +162,7 @@ pipeline {
             steps {
                 sh "docker rmi ${DOCKER_IMAGE}:${BUILD_TAG} || true"
                 sh "docker rmi ${DOCKER_IMAGE}:latest || true"
+                sh "docker image prune -f || true"
             }
         }
     }
@@ -147,6 +179,7 @@ pipeline {
         }
     }
 }
+
 ```
 
 ---
@@ -212,8 +245,53 @@ git push origin main
 ```
 
 ---
+### PASO 2 — Configurar servidor de SonarQube en Jenkins (antes del pipeline)
 
-### PASO 2 — Crear el pipeline en Jenkins (6:00 – 8:00)
+> _Pantalla: Jenkins → configuración global._
+
+"Antes de crear el pipeline, necesito registrar el servidor de SonarQube en Jenkins.
+
+Voy a:
+**Manage Jenkins** → **System** → **SonarQube servers** → **Add SonarQube**
+
+Configuro:
+- **Name:** `sonarqube-server`
+- **Server URL:** `http://<IP_DEL_CONTENEDOR_SONARQUBE>:9000` _(IP del contenedor)_
+- **Server authentication token:** seleccionar `sonarqube-server`
+
+---
+### ⚠️ Importante — No usar localhost
+
+La URL **NO debe ser `http://localhost:9000`**.
+¿Por qué?
+- Jenkins corre en un contenedor
+- SonarQube corre en otro contenedor
+- Para Jenkins, `localhost` apunta a **sí mismo**, no a SonarQube
+    
+Entonces:
+- `localhost` → Jenkins
+- `IP DEL CONENEDOR SONARQUBE` → contenedor de SonarQube
+    
+Si usas `localhost`, el pipeline falla con:
+
+```
+connection refused
+```
+
+Click en **Save**
+
+Con esto, Jenkins ya puede comunicarse correctamente con SonarQube y el stage:
+```
+withSonarQubeEnv('sonarqube-server')
+```
+va a funcionar sin problemas."
+
+---
+
+Si quieres, el paso 7 lo dejamos como validación del pipeline + cómo detectar rápido cuando SonarQube está mal conectado (ahí hay varios errores típicos interesantes).
+
+
+### PASO 3 — Crear el pipeline en Jenkins (6:00 – 8:00)
 
 > *Pantalla: navegador en Jenkins.*
 
@@ -233,7 +311,7 @@ Click en **'Save'**."
 
 ---
 
-### PASO 3 — Ejecutar y observar cada stage (8:00 – 15:00)
+### PASO 4 — Ejecutar y observar cada stage (8:00 – 15:00)
 
 > *Pantalla: Stage View del pipeline corriendo en Jenkins.*
 
@@ -297,7 +375,7 @@ Commit y push. En este momento, `gitops-infra` tiene el nuevo tag. ArgoCD va a d
 
 ---
 
-### PASO 4 — Verificar los resultados (15:00 – 17:30)
+### PASO 5 — Verificar los resultados (15:00 – 17:30)
 
 > *Pantalla: tres ventanas — Jenkins, Docker Hub, GitHub.*
 
