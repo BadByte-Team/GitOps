@@ -9,7 +9,7 @@ pipeline {
     environment {
         DOCKER_HUB_CREDS = credentials('docker-hub-credentials')
         GITHUB_TOKEN     = credentials('github-token')
-        DOCKER_IMAGE     = "TU_USUARIO_DOCKERHUB/curso-gitops"
+        DOCKER_IMAGE     = "thedailybuild/curso-gitops"
         SONARQUBE_URL    = "http://localhost:9000"
         SCANNER_HOME     = tool('sonar-scanner')
     }
